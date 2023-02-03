@@ -2,7 +2,7 @@ Package: sdp
 Type: Package
 Title: Stochastic degradation process
 Version: 0.1.0
-Authors:
+Author:
  person('Liangliang','Zhuang',email = 'liangliangzhuang1997@gmail.com',role = c('aut','cre))
 Maintainer: Liangliang Zhuang <liangliangzhuang1997@gmail.com>
 Description: More about what it does (maybe more than one line).   
