@@ -1,2 +1,2 @@
-# sdp(Stochastic degradation process)
+# sdp (Stochastic degradation process)
 
