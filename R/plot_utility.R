@@ -1,5 +1,6 @@
 plot_path = function(data){
   # 画图
+  library(tidyverse)
   p = data %>% pivot_longer(paste(1:ncol(data[,-1])),
                             names_to = "Group",
                             values_to = "y") %>%

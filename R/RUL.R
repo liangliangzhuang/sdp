@@ -16,7 +16,10 @@ RUL = function(t = 1:100, cur_time = 30, threshold = 350, data = dat[[1]],
     }
   } else if(process == "IG"){
     for(i in 1:(ncol(data)-1)){
-      RUL[[i]] = NA
+      RUL[[i]] = numeric()
+      ll = sqrt(par[2])/sqrt((threshold - cur_path[i]))
+      RUL[[i]] = dnorm(ll * (t - threshold/par[1])) * ll - 2*par[2]/par[1] * exp(2 * par[2] * t / par[1]) * pnorm(- ll * ((threshold - cur_path[i])/par[1] + t)) +
+        exp(2*par[2]*t/par[1]) * dnorm(-ll * ((threshold - cur_path[i])/par[1] + t) ) * ll
     }
   }
   return(RUL)

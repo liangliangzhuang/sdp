@@ -22,11 +22,11 @@ parameters {
 
 
 model {
-  w ~ gamma(1,1); # scale
-  mu ~ normal(0, 1); #shape
+  w ~ gamma(1,1); //scale
+  mu ~ normal(0, 1); //shape
   for (i in 1:I){
     for (j in 1:J) {
-      x[i,j] ~ IG_log (mu * t[i,j], w * mu^2 * t[i,j]^2);
+      x[i,j] ~ IG_log (mu * t[i,j], w * t[i,j]^2);
     }
   }
 }

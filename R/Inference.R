@@ -64,13 +64,6 @@ sta_infer = function(method = "MLE", process = "Wiener", type = "classical",
 
 
 
-
-
-
-
-
-
-
 # else if(process == "Gamma"){
 #     if(method == "MLE"){
 #       mle_re = optim(par=c(3,3), fn = Gamma_mle,
