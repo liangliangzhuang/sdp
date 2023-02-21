@@ -15,10 +15,14 @@ knitr::opts_chunk$set(
 )
 ```
 
+# sdp <a href='https://liangliangzhuang.github.io/sdp/'><img src='man/figures/logo.png' align="right" height="139" /></a>
+
+
 <!-- badges: start -->
+
 <!-- badges: end -->
 
-# Overview
+## Overview
 
 The goal of sdp is to provide engineers with practical guidance on how to analyze data using common degradation models: Wiener process, Gamma process, and Inverse Gaussian process. For each degradation process, we provide data simulation generation, statistical inference, and remaining useful life prognostics.
 
@@ -124,5 +128,44 @@ RUL_plot(fut_time = c(50,55,60,65,70,75,80),time_epoch = 1:100,
 
 ```
 
+## Example: lithium_battery data
+
+
+```{r warning=FALSE}
+str(lithium_battery)
+plot_path(lithium_battery[[1]]) + 
+  # scale_color_discrete() +
+  theme_bw() + 
+  theme(panel.grid = element_blank()) 
+```
+
+
+```{r warning=FALSE}
+# Inference
+# MLE ========
+mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical",
+                    data = lithium_battery[[1]])
+mle_fit
+Reliability(t = 100, threshold = lithium_battery[[2]][1],par = mle_fit,
+            process = "Wiener",type = "classical")
+Reliability_cowplot(R_time = 1:300, sum_para = mle_fit, threshold = lithium_battery[[2]],
+                               process = "Wiener", type = "classical")
+```
+
+```{r}
+rul2 = RUL(t = 1:100, cur_time = 30, threshold = lithium_battery[[2]][1], data = lithium_battery[[1]], par = mle_fit[,2], process = "Wiener", type = "classical")
+
+RUL_plot(fut_time = c(10,15,20,25,30), 
+         time_epoch = 1:300,
+         group = 1,
+         process = "Wiener", 
+         type = "classical",
+         threshold = lithium_battery[[2]][1],
+         dat = lithium_battery[[1]],
+         zlim = c(0,0.01),
+         xlim = c(0,300),
+         para = mle_fit[,2],
+         real_RUL=c(NA,NA,NA,NA,NA,NA))
+```
 
 

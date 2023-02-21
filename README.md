@@ -1,9 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# sdp <a href='https://liangliangzhuang.github.io/sdp/'><img src='man/figures/logo.png' align="right" height="139" /></a>
+
 <!-- badges: start -->
 <!-- badges: end -->
 
-# Overview
+## Overview
 
 The goal of sdp is to provide engineers with practical guidance on how
 to analyze data using common degradation models: Wiener process, Gamma
@@ -58,20 +61,20 @@ str(dat)
 #> List of 2
 #>  $ :'data.frame':    200 obs. of  7 variables:
 #>   ..$ Time: num [1:200] 0 1 2 3 4 5 6 7 8 9 ...
-#>   ..$ 1   : num [1:200] 0 1.37 5.01 9.11 8.95 ...
-#>   ..$ 2   : num [1:200] 0 0.894 2.037 15.414 12.296 ...
-#>   ..$ 3   : num [1:200] 0 -0.527 5.003 9.684 14.833 ...
-#>   ..$ 4   : num [1:200] 0 1.24 3.43 5.45 4.48 ...
-#>   ..$ 5   : num [1:200] 0 6.16 11.92 10 13.23 ...
-#>   ..$ 6   : num [1:200] 0 1.99 -1.85 5.37 8.91 ...
+#>   ..$ 1   : num [1:200] 0 3.09 9 10.53 8.77 ...
+#>   ..$ 2   : num [1:200] 0 -0.764 0.437 0.425 4.464 ...
+#>   ..$ 3   : num [1:200] 0 3.53 1.75 7.2 12.62 ...
+#>   ..$ 4   : num [1:200] 0 0.406 5.725 8.224 8.018 ...
+#>   ..$ 5   : num [1:200] 0 0.983 4.513 7.027 6.358 ...
+#>   ..$ 6   : num [1:200] 0 -0.441 3.245 8.509 14.474 ...
 #>  $ :'data.frame':    200 obs. of  7 variables:
 #>   ..$ Time: num [1:200] 0 1 2 3 4 5 6 7 8 9 ...
-#>   ..$ 1   : num [1:200] 0 1.365 3.644 4.1 -0.165 ...
-#>   ..$ 2   : num [1:200] 0 0.894 1.143 13.377 -3.118 ...
-#>   ..$ 3   : num [1:200] 0 -0.527 5.53 4.681 5.148 ...
-#>   ..$ 4   : num [1:200] 0 1.237 2.19 2.027 -0.977 ...
-#>   ..$ 5   : num [1:200] 0 6.16 5.76 -1.91 3.22 ...
-#>   ..$ 6   : num [1:200] 0 1.99 -3.84 7.21 3.54 ...
+#>   ..$ 1   : num [1:200] 0 3.09 5.91 1.53 -1.76 ...
+#>   ..$ 2   : num [1:200] 0 -0.7639 1.2011 -0.0119 4.0386 ...
+#>   ..$ 3   : num [1:200] 0 3.53 -1.78 5.44 5.42 ...
+#>   ..$ 4   : num [1:200] 0 0.406 5.318 2.5 -0.206 ...
+#>   ..$ 5   : num [1:200] 0 0.983 3.53 2.513 -0.669 ...
+#>   ..$ 6   : num [1:200] 0 -0.441 3.685 5.265 5.965 ...
 ```
 
 Using `plot_path()` function to plot the simulated degradation data.
@@ -107,8 +110,8 @@ estimates.
 mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat[[1]])
 mle_fit
 #>         low   mean     up
-#> [1,] 1.8831 2.0606 2.2380
-#> [2,] 3.0025 3.1280 3.2534
+#> [1,] 2.0080 2.1809 2.3537
+#> [2,] 2.9249 3.0471 3.1693
 ```
 
 #### Bayes
@@ -142,8 +145,8 @@ fit1 = sta_infer(method = "Bayes", process = "Wiener",type = "classical",data = 
 bayes_fit = rstan::summary(fit1)$summary[c(1,2),c(4,1,8)] #
 bayes_fit
 #>        2.5%     mean    97.5%
-#> mu 1.885431 2.058223 2.222726
-#> w  3.016682 3.132778 3.264447
+#> mu 2.008699 2.181743 2.352026
+#> w  2.924380 3.052988 3.191184
 # print(fit1, probs = c(0.025,0.5,0.975),pars = c("mu","w"))
 rstan::plot(fit1)
 ```
@@ -183,6 +186,83 @@ RUL_plot(fut_time = c(50,55,60,65,70,75,80),time_epoch = 1:100,
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-2.png" width="100%" />
+
+    #> $rect
+    #> $rect$w
+    #> [1] 0.2499835
+    #> 
+    #> $rect$h
+    #> [1] 0.1139012
+    #> 
+    #> $rect$left
+    #> [1] -0.1004324
+    #> 
+    #> $rect$top
+    #> [1] 0.1683858
+    #> 
+    #> 
+    #> $text
+    #> $text$x
+    #> [1] -0.02995602 -0.02995602 -0.02995602
+    #> 
+    #> $text$y
+    #> [1] 0.13991046 0.11143515 0.08295984
+
+## Example: lithium_battery data
+
+``` r
+str(lithium_battery)
+#> List of 2
+#>  $ data     :'data.frame':   168 obs. of  5 variables:
+#>   ..$ Time : int [1:168] 1 2 3 4 5 6 7 8 9 10 ...
+#>   ..$ B0005: num [1:168] 0 0.0102 0.0211 0.0212 0.0218 ...
+#>   ..$ B0006: num [1:168] 0 0.0102 0.022 0.0221 0.0348 ...
+#>   ..$ B0007: num [1:168] 0 0.0104 0.0104 0.0103 0.0116 ...
+#>   ..$ B0018: num [1:168] 0 0.0118 0.0154 0.0243 0.0223 ...
+#>  $ threshold: num [1:4] 0.456 0.635 0.491 0.455
+plot_path(lithium_battery[[1]]) + 
+  # scale_color_discrete() +
+  theme_bw() + 
+  theme(panel.grid = element_blank()) 
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+``` r
+# Inference
+# MLE ========
+mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical",
+                    data = lithium_battery[[1]])
+mle_fit
+#>         low   mean     up
+#> [1,] 0.0024 0.0038 0.0051
+#> [2,] 0.0167 0.0176 0.0185
+Reliability(t = 100, threshold = lithium_battery[[2]][1],par = mle_fit,
+            process = "Wiener",type = "classical")
+#> [1] 0.8633334
+Reliability_cowplot(R_time = 1:300, sum_para = mle_fit, threshold = lithium_battery[[2]],
+                               process = "Wiener", type = "classical")
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+``` r
+rul2 = RUL(t = 1:100, cur_time = 30, threshold = lithium_battery[[2]][1], data = lithium_battery[[1]], par = mle_fit[,2], process = "Wiener", type = "classical")
+
+RUL_plot(fut_time = c(10,15,20,25,30), 
+         time_epoch = 1:300,
+         group = 1,
+         process = "Wiener", 
+         type = "classical",
+         threshold = lithium_battery[[2]][1],
+         dat = lithium_battery[[1]],
+         zlim = c(0,0.01),
+         xlim = c(0,300),
+         para = mle_fit[,2],
+         real_RUL=c(NA,NA,NA,NA,NA,NA))
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
     #> $rect
     #> $rect$w
