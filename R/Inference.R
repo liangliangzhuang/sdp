@@ -16,6 +16,7 @@
 #'
 
 sta_infer = function(method, process, type, data){
+  options(warn = -1)
   if(method == "MLE"){
     mle_re = optim(par=c(1,1), fn = MLE, process = process,
                    data = data, method = "BFGS", hessian = TRUE)
@@ -23,10 +24,11 @@ sta_infer = function(method, process, type, data){
     # 区间估计
     mle_up = mle_re$par + sqrt(diag(solve(mle_re$hessian)))*qnorm(0.975)
     mle_low = mle_re$par - sqrt(diag(solve(mle_re$hessian)))*qnorm(0.975)
-    mle_summary = round(cbind(mle_low,mle_re$par,mle_up),3)
+    mle_summary = round(cbind(mle_low,mle_re$par,mle_up),4)
     colnames(mle_summary) = c("low","mean","up")
     return(mle_summary)
   } else if(method == "Bayes"){
+    rstan::rstan_options(auto_write = TRUE)
     # 数据准备
     group = ncol(data) - 1;time = data[,1];y = data[-1,-1];group = ncol(data[,-1])
     delta_time = matrix(rep(diff(time),group),length(diff(time)),group)
@@ -42,7 +44,6 @@ sta_infer = function(method, process, type, data){
     # 后验抽样
     # library(rstan)
     options(mc.cores = parallel::detectCores())
-    rstan_options(auto_write = TRUE)
     if(process == "Wiener"){
       wiener_linear = "data {
                                 int<lower=0> I;
@@ -62,7 +63,7 @@ sta_infer = function(method, process, type, data){
                                 mu ~ normal(0, 100/w);
                                 for (i in 1:I){
                                   for (j in 1:J) {
-                                    x[i,j] ~ normal(mu * t[i,j], 1/w * t[i,j]);
+                                    x[i,j] ~ normal(mu * t[i,j], w * t[i,j]);
                                   }
                                 }
                               }

@@ -4,7 +4,7 @@
 \alias{plot_path}
 \title{Remaining Useful Life}
 \usage{
-plot_path(data)
+plot_path(data = liion_new)
 }
 \arguments{
 \item{data}{data.}

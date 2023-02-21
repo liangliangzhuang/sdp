@@ -16,7 +16,10 @@ sim_dat(group, t, para, process)
 \item{process}{Wiener, Gamma or Inverse Gaussian process.}
 }
 \value{
-Return a list containing RUL at different time points for each group.
+Return a list containing simulated data at different time points for each group.
+The output is a list.
+The first part of the list is the amount of degradation of the simulated data,
+and the second part is the increment of its degradation
 }
 \description{
 This function is used to generate simulated degradation data.

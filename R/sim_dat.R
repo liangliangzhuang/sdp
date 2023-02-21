@@ -7,7 +7,10 @@
 #' @param para parameters of a certain model.
 #' @param process Wiener, Gamma or Inverse Gaussian process.
 #'
-#' @return  Return a list containing RUL at different time points for each group.
+#' @return  Return a list containing simulated data at different time points for each group.
+#' The output is a list.
+#' The first part of the list is the amount of degradation of the simulated data,
+#' and the second part is the increment of its degradation
 #' @examples
 #' dat <- sim_dat(group = 6, t = 1:200, para = c(2, 3), process = "Wiener")
 #' head(dat)

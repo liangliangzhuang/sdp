@@ -17,7 +17,7 @@ Reliability_plot(
 
 \item{sum_para}{sum_para}
 
-\item{threshold}{threshold}
+\item{threshold}{a vector of thresholds for each group.}
 
 \item{process}{Wiener, Gamma or Inverse Gaussian process.}
 

@@ -2,19 +2,19 @@
 % Please edit documentation in R/RUL_plot.R
 \name{RUL_plot}
 \alias{RUL_plot}
-\title{Remaining Useful Life}
+\title{Remaining Useful Life Ploting}
 \usage{
 RUL_plot(
   fut_time = c(50, 55, 60, 65, 70, 75, 80),
   group = 1,
-  time_epoch = 1:100,
+  time_epoch = 1:300,
   threshold = 350,
   data = dat[[1]],
   para = mle_par,
   process = "Wiener",
   type = "classical",
-  zlim = c(0, 0.08),
-  xlim = c(0, 100),
+  zlim = c(0, 0.01),
+  xlim = c(0, 300),
   real_RUL = real_RUL
 )
 }

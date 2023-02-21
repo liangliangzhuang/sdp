@@ -3,7 +3,7 @@
 #' This function is used to calculate Remaining Useful Life (RUL).
 #' @param R_time R_time
 #' @param sum_para  sum_para
-#' @param threshold threshold
+#' @param threshold a vector of thresholds for each group.
 #' @param process Wiener, Gamma or Inverse Gaussian process.
 #' @param type classical in default.
 #'
