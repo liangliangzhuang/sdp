@@ -13,7 +13,7 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
-#' #' dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
+#' dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
 #' mle_fit <- sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat[[1]])
 #' RUL_plot(
 #'   fut_time = c(50, 55, 60, 65, 70, 75, 80), time_epoch = 1:100, threshold = 150, zlim = c(0, 0.05),

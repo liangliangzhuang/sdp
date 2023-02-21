@@ -6,6 +6,12 @@
 \usage{
 cumsub(x)
 }
+\arguments{
+\item{x}{data.}
+}
+\value{
+Return a list containing RUL at different time points for each group.
+}
 \description{
-This function is used to calculate Remaining Useful Life (RUL).
+Remaining Useful Life
 }

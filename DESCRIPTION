@@ -14,10 +14,13 @@ Imports:
     expint,
     ggplot2,
     methods,
+    plot3D,
     Rcpp (>= 0.12.0),
     RcppParallel (>= 5.0.1),
-    rstan (>= 2.18.1),
+    rstan,
     rstantools (>= 2.2.0),
+    SuppDists,
+    tidyr,
     viridis
 Depends: 
     R (>= 3.4.0),

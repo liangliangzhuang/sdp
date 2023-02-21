@@ -3,9 +3,7 @@
 #' This function is used to calculate reliability function.
 #'
 #' @param t time.
-#' @param cur_time current time.
 #' @param threshold threshold of a degradation path.
-#' @param data degradation data.
 #' @param par parameters of a certain model.
 #' @param process Wiener, Gamma or Inverse Gaussian process.
 #' @param type classical in default.

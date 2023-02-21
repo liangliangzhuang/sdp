@@ -16,6 +16,6 @@ Return a list containing RUL at different time points for each group.
 This function is used to calculate Remaining Useful Life (RUL).
 }
 \examples{
-dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
+dat <- sim_dat(group = 6, t = 1:200, para = c(2, 3), process = "Wiener")
 plot_path(dat[[1]])
 }

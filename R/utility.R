@@ -1,7 +1,8 @@
 #' Remaining Useful Life
+#' @param x data.
 #'
-#' This function is used to calculate Remaining Useful Life (RUL).
-#'
+#' @return  Return a list containing RUL at different time points for each group.
+#' @export
 cumsub <- function(x) {
   # 完成逐个相减功能，类似cumsum
   re <- numeric()

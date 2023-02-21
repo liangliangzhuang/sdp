@@ -16,7 +16,8 @@ sta_infer(method, process, type, data)
 \item{data}{degradation data.}
 }
 \value{
-Returns a data frame if method is MLE, returns stan raw results if method is Bayes.
+Returns a data frame if method is MLE,
+returns stan raw results if method is Bayes.
 }
 \description{
 This function is used to statistical inference of model parameters.

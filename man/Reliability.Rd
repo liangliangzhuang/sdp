@@ -22,10 +22,6 @@ Reliability(
 \item{process}{Wiener, Gamma or Inverse Gaussian process.}
 
 \item{type}{classical in default.}
-
-\item{cur_time}{current time.}
-
-\item{data}{degradation data.}
 }
 \value{
 Return a list containing RUL at different time points for each group.
@@ -34,7 +30,7 @@ Return a list containing RUL at different time points for each group.
 This function is used to calculate reliability function.
 }
 \examples{
-dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
-mle_fit = sta_infer(method = "MLE", process = "Wiener",type = "classical",data = dat[[1]])
-Reliability(t = 50, threshold = 150,par = mle_fit,process = "Wiener",type = "classical")
+dat <- sim_dat(group = 6, t = 1:200, para = c(2, 3), process = "Wiener")
+mle_fit <- sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat[[1]])
+Reliability(t = 50, threshold = 150, par = mle_fit, process = "Wiener", type = "classical")
 }

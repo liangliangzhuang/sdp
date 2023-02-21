@@ -38,7 +38,7 @@ sim_dat <- function(group, t, para, process) {
   } else if (process == "IG") {
     for (i in 1:group) {
       for (j in 1:epoch) {
-        dat_unit[j, i + 1] <- SuppDists::rinvGauss(1, para[1] * delta_t[j], para[2] * (delta_t[j])^2)
+        dat_unit[j, i + 1] <- rinvGauss(1, para[1] * delta_t[j], para[2] * (delta_t[j])^2)
       }
       dat[, i + 1] <- cumsum(dat_unit[, i + 1])
     }
