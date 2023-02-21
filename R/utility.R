@@ -1,4 +1,7 @@
-
+#' Remaining Useful Life
+#'
+#' This function is used to calculate Remaining Useful Life (RUL).
+#'
 cumsub = function(x){
   #完成逐个相减功能，类似cumsum
   re = numeric()

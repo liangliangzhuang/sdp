@@ -1,6 +1,23 @@
-## 剩余使用寿命 ========
-RUL = function(t = 1:100, cur_time = 30, threshold = 350, data = dat[[1]],
-               par = mle_par, process = "Wiener", type = "classical"){
+#' Remaining Useful Life
+#'
+#' This function is used to calculate Remaining Useful Life (RUL).
+#'
+#' @param t time.
+#' @param cur_time current time.
+#' @param threshold threshold of a degradation path.
+#' @param data degradation data.
+#' @param par parameters of a certain model.
+#' @param process Wiener, Gamma or Inverse Gaussian process.
+#' @param type classical in default.
+#'
+#' @return  Return a list containing RUL at different time points for each group.
+#' @examples
+#' #' dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
+#' @export
+#' @importFrom expint gammainc
+#'
+RUL = function(t, cur_time, threshold, data,
+               par, process, type){
   RUL = list()
   cur_path = as.numeric(data[cur_time,])
   if(process == "Wiener"){
@@ -26,19 +43,6 @@ RUL = function(t = 1:100, cur_time = 30, threshold = 350, data = dat[[1]],
 }
 
 
-RUL_plot = function(fut_time = c(50,55,60,65,70,75,80), group = 1,
-                    time_epoch = 1:100, threshold = 350,
-                    para = mle_par, process = "Wiener", type = "classical",
-                    zlim = c(0,0.08), xlim = c(0,100), real_RUL=real_RUL){
-  rul_den = list() #matrix(NA,length(time_epoch),length(fut_time))
-  for(i in 1:length(fut_time)){
-    rul_den[[i]] = RUL(t = time_epoch, cur_time = fut_time[i],
-                      threshold = threshold, par = para,
-                      process = process, type = type)[[group]]
-  }
-  p = RUL_3D_density(fut_time,time_epoch,rul_den,threshold,
-                     real_RUL,zlim = zlim,xlim = xlim)
-  return(p)
-}
+
 
 

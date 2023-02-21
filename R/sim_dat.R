@@ -1,5 +1,19 @@
-
-sim_dat = function(group, t, para, process = "Wiener"){
+#' Generate simulated degradation data
+#'
+#' This function is used to generate simulated degradation data.
+#'
+#' @param t time.
+#' @param group The number of groups of products
+#' @param para parameters of a certain model.
+#' @param process Wiener, Gamma or Inverse Gaussian process.
+#'
+#' @return  Return a list containing RUL at different time points for each group.
+#' @examples
+#' dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
+#' head(dat)
+#' @export
+#'
+sim_dat = function(group, t, para, process){
   library(SuppDists)
   # para 指 mu,sigma
   # epoch 指测量次数，group 指组数

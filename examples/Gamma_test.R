@@ -28,7 +28,7 @@ traceplot(Bayes,pars = c("mu","w"), inc_warmup = T,nrow = 1) + theme(legend.posi
 Reliability_plot(R_time = 1:50,sum_para = mle_fit,threshold = 150,
                  process = "Gamma",type = "classical")
 
-RUL(t = 1:100, cur_time = 100, threshold = 150,
+RUL(t = 1:100, cur_time = 100, threshold = 150, data = dat[[1]],
     par = mle_fit[,2], process = "Gamma", type = "classical")
 
 # RUL计算和绘图有问题
