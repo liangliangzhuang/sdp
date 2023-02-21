@@ -56,14 +56,161 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="sdp-stochastic-degradation-process">sdp (Stochastic degradation process)<a class="anchor" aria-label="anchor" href="#sdp-stochastic-degradation-process"></a>
+<div class="page-header"><h1 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h1></div>
+<p>The goal of sdp is to provide engineers with practical guidance on how to analyze data using common degradation models: Wiener process, Gamma process, and Inverse Gaussian process. For each degradation process, we provide data simulation generation, statistical inference, and remaining useful life prognostics.</p>
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Degradation models have become an essential tool for analyzing complex systems. Over the last two decades, several degradation models have been developed to capture the degradation dynamics of systems and facilitate decision-making processes. This paper aims to provide practical guidance on the statistical analysis of common degradation processes to help engineers evaluate products effectively.</p>
-<p>The paper introduces three commonly used degradation models: the Wiener process, the Gamma process, and the Inverse Gaussian process. For each degradation process, the paper covers data simulation generation, statistical inference, and remaining useful life prognostics.</p>
-<p>In summary, this paper provides engineers with practical guidance on how to analyze data using common degradation models. It is hoped that this paper will contribute to the development of more accurate and reliable degradation models that can be used to improve product evaluation and decision-making processes in various industries.</p>
+<p>You can install the development version of sdp from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"liangliangzhuang/sdp"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://liangliangzhuang.github.io/sdp/">sdp</a></span><span class="op">)</span></span>
+<span><span class="co">## basic example code</span></span></code></pre></div>
+<p>sdp functions fall into five main categories:</p>
+<ul>
+<li><p>“Simulate” which can simulate a group of degradation.</p></li>
+<li><p>“Inference” which contains maximum likelihood estimator (MLE) and Bayesian method.</p></li>
+<li><p>“Plot” which contains several visualization functions, mainly for plotting degradation paths, reliability and remaining useful life. See <code><a href="reference/plot_path.html">plot_path()</a></code>, <code><a href="reference/RUL_plot.html">RUL_plot()</a></code>, <code>Reliability_plot</code>, <code><a href="reference/Reliability_cowplot.html">Reliability_cowplot()</a></code>, and <code><a href="reference/RUL_3D_density.html">RUL_3D_density()</a></code>.</p></li>
+<li><p>“Others” which contains some useful functions. See <code><a href="reference/cumsub.html">cumsub()</a></code>.</p></li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="example-simulated-data">Example: Simulated Data<a class="anchor" aria-label="anchor" href="#example-simulated-data"></a>
+</h2>
+<p>This is a basic example which shows you how to solve a common problem.</p>
+<p>We use <code><a href="reference/sim_dat.html">sim_dat()</a></code> to generate a simulated Wiener degradation process, where group is 6, time epoch is <code>t = 1:200</code>. We denote the parameters are <span class="math inline"><em>μ</em> = 2, <em>σ</em> = 3</span>. The output is a list: (i) first part of the list is the amount of degradation of the simulated data, (ii) second part is the increment of its degradation.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">=</span> <span class="fu"><a href="reference/sim_dat.html">sim_dat</a></span><span class="op">(</span>group <span class="op">=</span> <span class="fl">6</span>, t <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">200</span>, para <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,process <span class="op">=</span> <span class="st">"Wiener"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 2</span></span>
+<span><span class="co">#&gt;  $ :'data.frame':    200 obs. of  7 variables:</span></span>
+<span><span class="co">#&gt;   ..$ Time: num [1:200] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
+<span><span class="co">#&gt;   ..$ 1   : num [1:200] 0 1.37 5.01 9.11 8.95 ...</span></span>
+<span><span class="co">#&gt;   ..$ 2   : num [1:200] 0 0.894 2.037 15.414 12.296 ...</span></span>
+<span><span class="co">#&gt;   ..$ 3   : num [1:200] 0 -0.527 5.003 9.684 14.833 ...</span></span>
+<span><span class="co">#&gt;   ..$ 4   : num [1:200] 0 1.24 3.43 5.45 4.48 ...</span></span>
+<span><span class="co">#&gt;   ..$ 5   : num [1:200] 0 6.16 11.92 10 13.23 ...</span></span>
+<span><span class="co">#&gt;   ..$ 6   : num [1:200] 0 1.99 -1.85 5.37 8.91 ...</span></span>
+<span><span class="co">#&gt;  $ :'data.frame':    200 obs. of  7 variables:</span></span>
+<span><span class="co">#&gt;   ..$ Time: num [1:200] 0 1 2 3 4 5 6 7 8 9 ...</span></span>
+<span><span class="co">#&gt;   ..$ 1   : num [1:200] 0 1.365 3.644 4.1 -0.165 ...</span></span>
+<span><span class="co">#&gt;   ..$ 2   : num [1:200] 0 0.894 1.143 13.377 -3.118 ...</span></span>
+<span><span class="co">#&gt;   ..$ 3   : num [1:200] 0 -0.527 5.53 4.681 5.148 ...</span></span>
+<span><span class="co">#&gt;   ..$ 4   : num [1:200] 0 1.237 2.19 2.027 -0.977 ...</span></span>
+<span><span class="co">#&gt;   ..$ 5   : num [1:200] 0 6.16 5.76 -1.91 3.22 ...</span></span>
+<span><span class="co">#&gt;   ..$ 6   : num [1:200] 0 1.99 -3.84 7.21 3.54 ...</span></span></code></pre></div>
+<p>Using <code><a href="reference/plot_path.html">plot_path()</a></code> function to plot the simulated degradation data.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_path.html">plot_path</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-2-1.png" width="100%"></p>
+<p>The object is a ggplot, so you can add other related function to change the plot. For example, let’s change the theme pattern.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_path.html">plot_path</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span>panel.grid <span class="op">=</span> <span class="fu">element_blank</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-3-1.png" width="100%"></p>
+<div class="section level3">
+<h3 id="inference">Inference<a class="anchor" aria-label="anchor" href="#inference"></a>
+</h3>
+<p>For this section, we provide a tutorial for parameter estimates using MLE and Bayesian methods. Both methods are integrated in the <code><a href="reference/sta_infer.html">sta_infer()</a></code> function and just need to be set in the <code>"method"</code>.</p>
+<div class="section level4">
+<h4 id="mle">MLE<a class="anchor" aria-label="anchor" href="#mle"></a>
+</h4>
+<p>The output of MLE is the dataframe contains point and interval estimates.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mle_fit</span> <span class="op">=</span> <span class="fu"><a href="reference/sta_infer.html">sta_infer</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"MLE"</span>, process <span class="op">=</span> <span class="st">"Wiener"</span>, type <span class="op">=</span> <span class="st">"classical"</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">mle_fit</span></span>
+<span><span class="co">#&gt;         low   mean     up</span></span>
+<span><span class="co">#&gt; [1,] 1.8831 2.0606 2.2380</span></span>
+<span><span class="co">#&gt; [2,] 3.0025 3.1280 3.2534</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="bayes">Bayes<a class="anchor" aria-label="anchor" href="#bayes"></a>
+</h4>
+<p>The output of Bayes is the resampling in <code>rstan</code>. According to this object, we can do further process, e.g., prognostic, check an so on.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit1</span> <span class="op">=</span> <span class="fu"><a href="reference/sta_infer.html">sta_infer</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"Bayes"</span>, process <span class="op">=</span> <span class="st">"Wiener"</span>,type <span class="op">=</span> <span class="st">"classical"</span>,data <span class="op">=</span> <span class="va">dat</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Running /Library/Frameworks/R.framework/Resources/bin/R CMD SHLIB foo.c</span></span>
+<span><span class="co">#&gt; clang -arch arm64 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG   -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/Rcpp/include/"  -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/"  -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/unsupported"  -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/BH/include" -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/StanHeaders/include/src/"  -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/StanHeaders/include/"  -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppParallel/include/"  -I"/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DBOOST_NO_AUTO_PTR  -include '/Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/opt/R/arm64/include   -fPIC  -falign-functions=64 -Wall -g -O2  -c foo.c -o foo.o</span></span>
+<span><span class="co">#&gt; In file included from &lt;built-in&gt;:1:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/Eigen/Dense:1:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/Eigen/Core:88:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:1: error: unknown type name 'namespace'</span></span>
+<span><span class="co">#&gt; namespace Eigen {</span></span>
+<span><span class="co">#&gt; ^</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:628:16: error: expected ';' after top level declarator</span></span>
+<span><span class="co">#&gt; namespace Eigen {</span></span>
+<span><span class="co">#&gt;                ^</span></span>
+<span><span class="co">#&gt;                ;</span></span>
+<span><span class="co">#&gt; In file included from &lt;built-in&gt;:1:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/StanHeaders/include/stan/math/prim/mat/fun/Eigen.hpp:13:</span></span>
+<span><span class="co">#&gt; In file included from /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/Eigen/Dense:1:</span></span>
+<span><span class="co">#&gt; /Library/Frameworks/R.framework/Versions/4.2-arm64/Resources/library/RcppEigen/include/Eigen/Core:96:10: fatal error: 'complex' file not found</span></span>
+<span><span class="co">#&gt; #include &lt;complex&gt;</span></span>
+<span><span class="co">#&gt;          ^~~~~~~~~</span></span>
+<span><span class="co">#&gt; 3 errors generated.</span></span>
+<span><span class="co">#&gt; make: *** [foo.o] Error 1</span></span>
+<span><span class="va">bayes_fit</span> <span class="op">=</span> <span class="fu">rstan</span><span class="fu">::</span><span class="fu">summary</span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">8</span><span class="op">)</span><span class="op">]</span> <span class="co">#</span></span>
+<span><span class="va">bayes_fit</span></span>
+<span><span class="co">#&gt;        2.5%     mean    97.5%</span></span>
+<span><span class="co">#&gt; mu 1.885431 2.058223 2.222726</span></span>
+<span><span class="co">#&gt; w  3.016682 3.132778 3.264447</span></span>
+<span><span class="co"># print(fit1, probs = c(0.025,0.5,0.975),pars = c("mu","w"))</span></span>
+<span><span class="fu">rstan</span><span class="fu">::</span><span class="fu">plot</span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">rstan</span><span class="fu">::</span><span class="fu"><a href="https://mc-stan.org/rstan/reference/stanfit-method-traceplot.html" class="external-link">traceplot</a></span><span class="op">(</span><span class="va">fit1</span>,pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>,<span class="st">"w"</span><span class="op">)</span>, inc_warmup <span class="op">=</span> <span class="cn">T</span>,nrow <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span> <span class="fu">theme</span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-2.png" width="100%"></p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="reliability-and-rul">Reliability and RUL<a class="anchor" aria-label="anchor" href="#reliability-and-rul"></a>
+</h3>
+<p>Based on the statistical inference, we use <code><a href="reference/Reliability.html">Reliability()</a></code> and <code><a href="reference/RUL.html">RUL()</a></code> to calculate the Reliability and RUL, respectively. Then using <code><a href="reference/Reliability_plot.html">Reliability_plot()</a></code> and <code><a href="reference/RUL_plot.html">RUL_plot()</a></code> to plot.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">reb</span> <span class="op">=</span> <span class="fu"><a href="reference/Reliability.html">Reliability</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">50</span>, threshold <span class="op">=</span> <span class="fl">150</span>,par <span class="op">=</span> <span class="va">mle_fit</span>,</span>
+<span>                       process <span class="op">=</span> <span class="st">"Wiener"</span>,type <span class="op">=</span> <span class="st">"classical"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/Reliability_plot.html">Reliability_plot</a></span><span class="op">(</span>R_time <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">150</span>,sum_para <span class="op">=</span> <span class="va">mle_fit</span>,threshold <span class="op">=</span> <span class="fl">150</span>,</span>
+<span>                 process <span class="op">=</span> <span class="st">"Wiener"</span>,type <span class="op">=</span> <span class="st">"classical"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">rul</span> <span class="op">=</span> <span class="fu"><a href="reference/RUL.html">RUL</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, cur_time <span class="op">=</span> <span class="fl">100</span>, threshold <span class="op">=</span> <span class="fl">150</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    par <span class="op">=</span> <span class="va">mle_fit</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, process <span class="op">=</span> <span class="st">"Wiener"</span>, type <span class="op">=</span> <span class="st">"classical"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/RUL_plot.html">RUL_plot</a></span><span class="op">(</span>fut_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>,<span class="fl">55</span>,<span class="fl">60</span>,<span class="fl">65</span>,<span class="fl">70</span>,<span class="fl">75</span>,<span class="fl">80</span><span class="op">)</span>,time_epoch <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,</span>
+<span>                threshold <span class="op">=</span> <span class="fl">150</span>,zlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.05</span><span class="op">)</span>,xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span>,</span>
+<span>                para <span class="op">=</span> <span class="va">mle_fit</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>,</span>
+<span>                real_RUL<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span><span class="op">)</span><span class="op">+</span><span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-2.png" width="100%"></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $rect</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $rect$w</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2499835</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $rect$h</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1139012</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $rect$left</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.1004324</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $rect$top</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.1683858</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $text</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $text$x</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] -0.02995602 -0.02995602 -0.02995602</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $text$y</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.13991046 0.11143515 0.08295984</span></span></code></pre></div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="license">
