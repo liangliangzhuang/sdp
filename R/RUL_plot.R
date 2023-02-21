@@ -1,4 +1,4 @@
-#' Remaining Useful Life
+#' Remaining Useful Life Ploting
 #'
 #' This function is used to calculate Remaining Useful Life (RUL).
 #'
