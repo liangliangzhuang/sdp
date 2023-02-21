@@ -18,6 +18,7 @@
 #'   R_time = 1:150, sum_para = mle_fit, threshold = 150,
 #'   process = "Wiener", type = "classical"
 #' )
+#' @import ggplot2
 #' @export
 #'
 Reliability_plot <- function(R_time = 1:300, sum_para = fit, threshold = 150,

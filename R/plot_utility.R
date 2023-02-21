@@ -10,10 +10,11 @@
 #' plot_path(dat[[1]])
 #' @export
 #' @importFrom tidyr pivot_longer
+#' @importFrom viridis scale_color_viridis
+#' @import ggplot2
 #'
 plot_path <- function(data) {
   # 画图
-  library(tidyverse)
   p <- data %>%
     pivot_longer(paste(1:ncol(data[, -1])),
       names_to = "Group",

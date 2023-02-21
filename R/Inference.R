@@ -40,7 +40,7 @@ sta_infer = function(method, process, type, data){
       t = delta_time
     )
     # 后验抽样
-    library(rstan)
+    # library(rstan)
     options(mc.cores = parallel::detectCores())
     rstan_options(auto_write = TRUE)
     if(process == "Wiener"){
@@ -67,7 +67,7 @@ sta_infer = function(method, process, type, data){
                                 }
                               }
                               "
-      fit1 = stan(model_code = wiener_linear,
+      fit1 = rstan::stan(model_code = wiener_linear,
                   data = process_data, chains = 1, warmup = 1000, iter = 2000,
                   cores = 1,refresh = 0)
     }else if(process == "Gamma"){
@@ -89,13 +89,13 @@ sta_infer = function(method, process, type, data){
                                 mu ~ normal(0, 100/w);
                                 for (i in 1:I){
                                   for (j in 1:J) {
-                                    x[i,j] ~ gamma(mu * t[i,j], 1/w); //这里的w 可能是倒数，和公式不同
+                                    x[i,j] ~ gamma(mu * t[i,j], 1/w);
                                   }
                                 }
                               }
 
         "
-      fit1 = stan(model_code = gamma_linear,
+      fit1 = rstan::stan(model_code = gamma_linear,
                   data = process_data, chains = 1, warmup = 1000, iter = 2000,
                   cores = 1,refresh = 0)
     }else if(process == "IG"){
@@ -133,7 +133,7 @@ sta_infer = function(method, process, type, data){
                 }
               }
 "
-      fit1 = stan(model_code = ig_linear,
+      fit1 = rstan::stan(model_code = ig_linear,
                   data = process_data, chains = 1, warmup = 1000, iter = 2000,
                   cores = 1,refresh = 0)
     }
