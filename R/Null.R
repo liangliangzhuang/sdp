@@ -21,4 +21,3 @@
 #' @name sdp
 
 NULL
-
