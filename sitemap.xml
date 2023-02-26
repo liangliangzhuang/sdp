@@ -4,6 +4,15 @@
     <loc>https://liangliangzhuang.github.io/sdp/404.html</loc>
   </url>
   <url>
+    <loc>https://liangliangzhuang.github.io/sdp/articles/Real-data-analysis.html</loc>
+  </url>
+  <url>
+    <loc>https://liangliangzhuang.github.io/sdp/articles/Simulation-data-analysis.html</loc>
+  </url>
+  <url>
+    <loc>https://liangliangzhuang.github.io/sdp/articles/index.html</loc>
+  </url>
+  <url>
     <loc>https://liangliangzhuang.github.io/sdp/authors.html</loc>
   </url>
   <url>
@@ -29,6 +38,9 @@
   </url>
   <url>
     <loc>https://liangliangzhuang.github.io/sdp/reference/Reliability_plot.html</loc>
+  </url>
+  <url>
+    <loc>https://liangliangzhuang.github.io/sdp/reference/acc_stress.html</loc>
   </url>
   <url>
     <loc>https://liangliangzhuang.github.io/sdp/reference/cumsub.html</loc>
