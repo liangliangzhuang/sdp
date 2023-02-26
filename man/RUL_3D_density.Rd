@@ -36,3 +36,6 @@ Return a list containing RUL at different time points for each group.
 \description{
 This function is used to calculate Remaining Useful Life (RUL).
 }
+\examples{
+1
+}

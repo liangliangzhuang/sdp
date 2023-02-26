@@ -19,8 +19,24 @@
 #' @return  Returns a data frame if method is MLE,
 #' returns stan raw results if method is Bayes.
 #' @examples
+#' dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+#' process = "Wiener",type = "classical",
+#' s = NULL, rel = NULL)
+#' # MLE
+#' mle_fit = sta_infer(method = "MLE", process = "Wiener",
+#' type = "classical", data = dat)
+#' mle_fit
+#' # Bayes
+#' library(rstan)
+#' bayes_fit = sta_infer(method = "Bayes", process = "Wiener",
+#' type = "classical", data = dat)
+#' bayes_fit$summary
+#' print(bayes_fit$summary, probs = c(0.025,0.5,0.975),pars = c("mu","w"))
+#' plot(bayes_fit$stan_re)
+#' # traceplot(bayes_fit$stan_re,pars = c("mu","w"),
+#' #            inc_warmup = TRUE,nrow = 1) +
+#' #    theme(legend.position = "top")
 #' @export
-#'
 
 sta_infer = function(method = "MLE",
                      process = "Wiener",
@@ -48,7 +64,7 @@ sta_infer = function(method = "MLE",
       return(mle_summary)
     } else if(method == "Bayes"){
       rstan::rstan_options(auto_write = TRUE)
-      # options(mc.cores = parallel::detectCores())
+      options(mc.cores = parallel::detectCores())
       # Data preparation
       if(type == "classical"){
         group = ncol(data[[1]]) - 1;time = data[[1]][,1];y = data[[1]][-1,-1];group = ncol(data[[1]][,-1])

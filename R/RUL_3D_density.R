@@ -13,6 +13,7 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
+#' 1
 #' @export
 #'
 

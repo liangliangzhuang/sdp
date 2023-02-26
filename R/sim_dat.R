@@ -15,6 +15,10 @@
 #' The first part of the list is the amount of degradation of the simulated data,
 #' and the second part is the increment of its degradation
 #' @examples
+#' dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+#' process = "Wiener",type = "classical",
+#' s = NULL, rel = NULL)
+#' str(dat)
 #' @export
 #'
 sim_dat <- function(group = 5,

@@ -11,6 +11,14 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
+#' dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+#' process = "Wiener",type = "classical")
+#' # MLE
+#' mle_fit = sta_infer(method = "MLE", process = "Wiener",
+#' type = "classical", data = dat)
+#' # Reliability
+#' Reliability_plot(R_time = 1:200,sum_para = mle_fit,threshold = 100,
+#' process = "Wiener",type = "classical")
 #' @import ggplot2
 #' @export
 #'

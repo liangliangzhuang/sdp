@@ -35,3 +35,13 @@ Return a list containing RUL at different time points for each group.
 \description{
 This function is used to calculate Remaining Useful Life (RUL).
 }
+\examples{
+dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+process = "Wiener",type = "classical")
+# MLE
+mle_fit = sta_infer(method = "MLE", process = "Wiener",
+type = "classical", data = dat)
+# Reliability
+Reliability_plot(R_time = 1:200,sum_para = mle_fit,threshold = 100,
+process = "Wiener",type = "classical")
+}

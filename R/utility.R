@@ -1,10 +1,10 @@
-#' Remaining Useful Life
-#' @param x data.
+#' Cumulative Substract
+#' @param x a numeric object, or an object that can be coerced to one of these.
 #'
-#' @return  Return a list containing RUL at different time points for each group.
+#' @return  Returns a vector whose elements are the cumulative substracts of the elements of the argument.
 #' @export
 cumsub <- function(x) {
-  # 完成逐个相减功能，类似cumsum
+  # Cumulative substract
   re <- numeric()
   re[1] <- x[1]
   for (i in 2:length(x)) {
@@ -13,8 +13,13 @@ cumsub <- function(x) {
   return(re)
 }
 
-
-acc_stress = function(s=1, rel = "2 * s / 5"){
+#' Relationship Between Parameter and Stress
+#' @param s stress.
+#' @param rel the relationship between parameter and stress.
+#' @return a numeric.
+#' @export
+acc_stress = function(s=1,
+                      rel = "2 * s / 5"){
   if(rel == 1){
     re = 1/s
   }else if(rel == 2){

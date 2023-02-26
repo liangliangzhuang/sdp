@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
 ```
 
 # sdp <a href='https://liangliangzhuang.github.io/sdp/'><img src='man/figures/logo.png' align="right" height="139" /></a>
@@ -38,7 +39,7 @@ You can install the development version of sdp from [GitHub](https://github.com/
 devtools::install_github("liangliangzhuang/sdp")
 ```
 
-## Getting started 
+## Get started 
 
 ```{r example}
 library(sdp)
@@ -47,130 +48,27 @@ library(sdp)
 
 sdp functions fall into five main categories:
 
-- "Simulate" which can simulate a group of degradation.
+- "Simulation" which can simulate a group of degradation models, see `sim_dat()`.
 
-- "Inference" which contains maximum likelihood estimator (MLE) and Bayesian method.
+- "Inference" which contains maximum likelihood estimator (MLE) and Bayesian method, see `sta_infer()`.
 
-- "Plot" which contains several visualization functions, mainly for plotting degradation paths, reliability and remaining useful life. See `plot_path()`, `RUL_plot()`,  `Reliability_plot`, `Reliability_cowplot()`, and `RUL_3D_density()`.
+- "Ploting" which contains several visualization functions, mainly for plotting degradation paths, reliability and remaining useful life. See `plot_path()`, `RUL_plot()`,  `Reliability_plot()`, `Reliability_cowplot()`, and `RUL_3D_density()`.
 
-- "Others" which contains some useful functions. See `cumsub()`.
-
-
-## Example: Simulated Data
-
-This is a basic example which shows you how to solve a common problem.
+- "Others" which contains some useful functions. See `cumsub()`, and `acc_stress()`.
 
 
-We use `sim_dat()` to generate a simulated Wiener degradation process, where group is 6, time epoch is `t = 1:200`. We denote the parameters are $\mu = 2, \sigma = 3$. The output is a list: (i) first part of the list is the amount of degradation of the simulated data, (ii) second part is the increment of its degradation.
+## Articles
 
-```{r cars}
-dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
-               process = "Wiener",type = "classical", 
-               s = NULL, rel = NULL)
-str(dat)
-```
+- [Real data analysis](https://liangliangzhuang.github.io/sdp/docs/articles/Real-data-analysis.html)
 
-Using `plot_path()` function to plot the simulated degradation data. 
-
-```{r}
-plot_path(dat)
-```
-
-The object is a ggplot, so you can add other related function to change the plot. For example, let's change the theme pattern. 
-
-```{r}
-plot_path(dat) + theme_bw() +
-  theme(panel.grid = element_blank())
-```
+- [Simulation data analysis](https://liangliangzhuang.github.io/sdp/docs/articles/Simulation-data-analysis.html)
 
 
-### Inference
+## Getting help
 
-For this section, we provide a tutorial for parameter estimates using MLE and Bayesian methods. Both methods are integrated in the `sta_infer()` function and just need to be set in the `"method"`. 
+If you encounter a clear bug, please file an issue with a minimal reproducible example on [GitHub](https://github.com/tidyverse/dplyr/issues).
 
-#### MLE
-
-The output of MLE is the dataframe contains point and interval estimates.
-
-```{r}
-mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat)
-mle_fit
-```
-
-
-#### Bayes
-
-The output of Bayes is the resampling in `rstan`. According to this object, we can do further process, e.g., prognostic, check an so on. 
-
-```{r message=FALSE,warning=FALSE,error=FALSE}
-bayes_fit = sta_infer(method = "Bayes", process = "Wiener", type = "classical", data = dat)
-bayes_fit$summary
-# print(fit1, probs = c(0.025,0.5,0.975),pars = c("mu","w"))
-rstan::plot(bayes_fit$stan_re)
-rstan::traceplot(bayes_fit$stan_re,pars = c("mu","w"), inc_warmup = T,nrow = 1) + theme(legend.position = "top")
-```
-
-
-### Reliability and RUL 
-
-Based on the statistical inference, we use `Reliability()` and `RUL()` to calculate the Reliability and RUL, respectively. Then using  `Reliability_plot()` and `RUL_plot()` to plot.
-
-```{r}
-reb = Reliability(t = 40, threshold = 100, par = mle_fit[,2],process = "Wiener",type = "classical")
-
-Reliability_plot(R_time = 1:200,sum_para = mle_fit,threshold = 100,
-                 process = "Wiener",type = "classical")
-
-
-rul = RUL(t = 1:100, cur_time = 80, threshold = 150, data = dat[[1]],
-          par = mle_fit[,2], process = "Wiener", type = "classical")
-rul
-
-RUL_plot(fut_time = c(50,55,60,65,70,75,80),time_epoch = 1:100,
-         threshold = 150,zlim = c(0,0.05),xlim = c(0,100),
-         para = mle_fit[,2], group = 1,
-         real_RUL=c(NA,NA,NA,NA,NA,NA)+40)
-```
-
-## Example: lithium_battery data
-
-
-```{r warning=FALSE}
-str(lithium_battery)
-lion_battery = list(lithium_battery[[1]])
-plot_path(lion_battery) + 
-  # scale_color_discrete() +
-  theme_bw() + 
-  theme(panel.grid = element_blank()) 
-```
-
-
-```{r warning=FALSE}
-# Inference
-# MLE ========
-mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical",
-                    data = lion_battery)
-mle_fit
-Reliability(t = 100, threshold = lithium_battery[[2]][1],par = mle_fit[,2],
-            process = "Wiener",type = "classical")
-Reliability_cowplot(R_time = 1:300, sum_para = mle_fit, threshold = lithium_battery[[2]],
-                               process = "Wiener", type = "classical")
-```
-
-```{r}
-rul2 = RUL(t = 1:100, cur_time = 30, threshold = lithium_battery[[2]][1], data = lithium_battery[[1]], par = mle_fit[,2], process = "Wiener", type = "classical")
-
-RUL_plot(fut_time = c(10,15,20,25,30,50), 
-         time_epoch = 1:30,
-         group = 1,
-         process = "Wiener", 
-         type = "classical",
-         threshold = lithium_battery[[2]][1],
-         dat = lithium_battery[[1]],
-         zlim = c(0,0.01),
-         xlim = c(0,30),
-         para = mle_fit[,2],
-         real_RUL=c(NA,NA,NA,NA,NA,NA))
-```
-
+<!-- --- -->
+<!-- Please note that this project is released with a [Contributor Code of Conduct](https://dplyr.tidyverse.org/CODE_OF_CONDUCT). -->
+<!-- By participating in this project you agree to abide by its terms. -->
 

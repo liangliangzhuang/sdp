@@ -1,0 +1,107 @@
+---
+title: "Simulation data analysis"
+description: >
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulation data analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+options(tibble.print_min = 4L, tibble.print_max = 4L)
+```
+
+```{r include=FALSE}
+library(sdp)
+```
+
+
+This is a basic example which shows you how to solve a common problem.
+
+## Simulate Wiener degradation paths
+
+We use `sim_dat()` to generate a simulated Wiener degradation process, where group is 6, time epoch is `t = 1:200`. We denote the parameters are $\mu = 2, \sigma = 3$. The output is a list: (i) first part of the list is the amount of degradation of the simulated data, (ii) second part is the increment of its degradation.
+
+```{r cars}
+dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+               process = "Wiener",type = "classical", 
+               s = NULL, rel = NULL)
+str(dat)
+```
+
+Using `plot_path()` function to plot the simulated degradation data. 
+
+```{r}
+plot_path(dat)
+```
+
+The object is a ggplot, so you can add other related function to change the plot. For example, let's change the theme pattern. 
+
+```{r}
+plot_path(dat) + theme_bw() +
+  theme(panel.grid = element_blank())
+```
+
+
+## Inference
+
+For this section, we provide a tutorial for parameter estimates using MLE and Bayesian methods. Both methods are integrated in the `sta_infer()` function and just need to be set in the `"method"`. 
+
+### MLE
+
+The output of MLE is the dataframe contains point and interval estimates.
+
+```{r}
+mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat)
+mle_fit
+```
+
+
+### Bayes
+
+The output of Bayes is the resampling in `rstan`. According to this object, we can do further process, e.g., prognostic, check an so on. 
+
+```{r message=FALSE,warning=FALSE,error=FALSE}
+bayes_fit = sta_infer(method = "Bayes", process = "Wiener", type = "classical", data = dat)
+bayes_fit$summary
+# print(fit1, probs = c(0.025,0.5,0.975),pars = c("mu","w"))
+rstan::plot(bayes_fit$stan_re)
+rstan::traceplot(bayes_fit$stan_re,pars = c("mu","w"), inc_warmup = T,nrow = 1) + theme(legend.position = "top")
+```
+
+
+## Reliability and RUL 
+
+Based on the statistical inference, we use `Reliability()` and `RUL()` to calculate the Reliability and RUL, respectively. Then using  `Reliability_plot()` and `RUL_plot()` to plot.
+
+```{r}
+reb = Reliability(t = 40, threshold = 100, par = mle_fit[,2],process = "Wiener",type = "classical")
+
+Reliability_plot(R_time = 1:100,sum_para = mle_fit,threshold = 100,
+                 process = "Wiener",type = "classical")
+```
+
+```{r fig.width = 6,fig.height = 6}
+rul = RUL(t = 1:100, cur_time = 80, threshold = 150, data = dat[[1]],
+          par = mle_fit[,2], process = "Wiener", type = "classical")
+str(rul)
+
+RUL_plot(fut_time = c(50,55,60,65,70,75,80),time_epoch = 1:100,
+         threshold = 150,zlim = c(0,0.05),xlim = c(0,100),data = dat[[1]],
+         para = mle_fit[,2], group = 1,
+         real_RUL=c(NA,NA,NA,NA,NA,NA)+40)
+```
+
+
+
+
+

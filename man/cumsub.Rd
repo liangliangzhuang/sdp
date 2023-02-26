@@ -2,16 +2,16 @@
 % Please edit documentation in R/utility.R
 \name{cumsub}
 \alias{cumsub}
-\title{Remaining Useful Life}
+\title{Cumulative Substract}
 \usage{
 cumsub(x)
 }
 \arguments{
-\item{x}{data.}
+\item{x}{a numeric object, or an object that can be coerced to one of these.}
 }
 \value{
-Return a list containing RUL at different time points for each group.
+Returns a vector whose elements are the cumulative substracts of the elements of the argument.
 }
 \description{
-Remaining Useful Life
+Cumulative Substract
 }

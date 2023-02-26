@@ -1,8 +1,8 @@
 MLE <- function(par = c(3, 3),
-                data = dat,
+                data = NULL,
                 process = "Wiener",
                 type = "classical",
-                s=NULL,
+                s = NULL,
                 rel = NULL) {
   # Input: par = c(mu, sigma), data, ...
   # Output: Negative log-likelihood function

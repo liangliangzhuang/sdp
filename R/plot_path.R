@@ -6,6 +6,14 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
+#' dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+#' process = "Wiener",type = "classical",
+#' s = NULL, rel = NULL)
+#' plot_path(dat)
+#' # add ggplot related functions.
+#' plot_path(dat) +
+#' theme_bw() +
+#' theme(panel.grid = element_blank())
 #' @export
 #' @importFrom tidyr pivot_longer
 #' @importFrom viridis scale_color_viridis

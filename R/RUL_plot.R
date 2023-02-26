@@ -16,19 +16,28 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
+#' dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+#' process = "Wiener",type = "classical")
+#' # MLE
+#' mle_fit = sta_infer(method = "MLE", process = "Wiener",
+#' type = "classical", data = dat)
+#' # RUL
+#' RUL_plot(fut_time = c(50,55,60,65,70,75,80),time_epoch = 1:100,
+#' threshold = 150,zlim = c(0,0.05),xlim = c(0,100),data = dat[[1]],
+#' para = mle_fit[,2], group = 1, real_RUL=c(NA,NA,NA,NA,NA,NA)+40)
 #' @export
 #'
 RUL_plot <- function(fut_time = c(50, 55, 60, 65, 70, 75, 80),
                      group = 1,
                      time_epoch = 1:100,
                      threshold = 350,
-                     data = dat[[1]],
-                     para = mle_par,
+                     data = NULL,
+                     para = NULL,
                      process = "Wiener",
                      type = "classical",
                      zlim = c(0, 0.01),
                      xlim = c(0, 300),
-                     real_RUL = real_RUL) {
+                     real_RUL = NULL) {
   if(type == 'acc') stop("This type can not provide a RUL distribution.")
   rul_den <- list() # matrix(NA,length(time_epoch),length(fut_time))
   for (i in 1:length(fut_time)) {

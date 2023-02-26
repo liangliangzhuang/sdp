@@ -38,3 +38,9 @@ and the second part is the increment of its degradation
 \description{
 This function is used to generate simulated degradation data.
 }
+\examples{
+dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+process = "Wiener",type = "classical",
+s = NULL, rel = NULL)
+str(dat)
+}
