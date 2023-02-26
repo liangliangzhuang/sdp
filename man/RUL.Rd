@@ -27,6 +27,3 @@ Return a list containing RUL at different time points for each group.
 \description{
 This function is used to calculate Remaining Useful Life (RUL).
 }
-\examples{
-#' dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
-}

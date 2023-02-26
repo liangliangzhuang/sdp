@@ -4,7 +4,15 @@
 \alias{sim_dat}
 \title{Generate simulated degradation data}
 \usage{
-sim_dat(group, t, para, process)
+sim_dat(
+  group = 5,
+  t = 1:100,
+  para = c(2, 3),
+  process = "Wiener",
+  type = "classical",
+  s = NULL,
+  rel = NULL
+)
 }
 \arguments{
 \item{group}{The number of groups of products}
@@ -14,6 +22,12 @@ sim_dat(group, t, para, process)
 \item{para}{parameters of a certain model.}
 
 \item{process}{Wiener, Gamma or Inverse Gaussian process.}
+
+\item{type}{classical in default.}
+
+\item{s}{stress.}
+
+\item{rel}{relationship.}
 }
 \value{
 Return a list containing simulated data at different time points for each group.
@@ -23,8 +37,4 @@ and the second part is the increment of its degradation
 }
 \description{
 This function is used to generate simulated degradation data.
-}
-\examples{
-dat <- sim_dat(group = 6, t = 1:200, para = c(2, 3), process = "Wiener")
-head(dat)
 }

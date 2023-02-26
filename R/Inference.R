@@ -7,147 +7,86 @@
 #' @param data degradation data.
 #' @param process Wiener, Gamma or Inverse Gaussian process.
 #' @param type classical in default.
+#' @param p  in default `p=0.975`.
+#' @param par initial parameter.
+#' @param chains in default `chains = 1`
+#' @param warmup  in default `warmup = 1000`.
+#' @param iter in default `iter= 2000`.
+#' @param cores cores = 1,
+#' @param s  stress.
+#' @param rel relationship.
 #'
 #' @return  Returns a data frame if method is MLE,
 #' returns stan raw results if method is Bayes.
 #' @examples
-#' 11
 #' @export
 #'
 
-sta_infer = function(method, process, type, data){
+sta_infer = function(method = "MLE",
+                     process = "Wiener",
+                     type = "classical",
+                     data = dat,
+                     p = 0.975,
+                     par = c(1,1),
+                     chains = 1,
+                     warmup = 1000,
+                     iter = 2000,
+                     cores = 1,
+                     s = NULL,
+                     rel = NULL){
   options(warn = -1)
-  if(method == "MLE"){
-    mle_re = optim(par=c(1,1), fn = MLE, process = process,
-                   data = data, method = "BFGS", hessian = TRUE)
-    mle_par = mle_re$par
-    # 区间估计
-    mle_up = mle_re$par + sqrt(diag(solve(mle_re$hessian)))*qnorm(0.975)
-    mle_low = mle_re$par - sqrt(diag(solve(mle_re$hessian)))*qnorm(0.975)
-    mle_summary = round(cbind(mle_low,mle_re$par,mle_up),4)
-    colnames(mle_summary) = c("low","mean","up")
-    return(mle_summary)
-  } else if(method == "Bayes"){
-    rstan::rstan_options(auto_write = TRUE)
-    # 数据准备
-    group = ncol(data) - 1;time = data[,1];y = data[-1,-1];group = ncol(data[,-1])
-    delta_time = matrix(rep(diff(time),group),length(diff(time)),group)
-    delta_y = matrix(NA,nrow(delta_time),group)
-    for(i in 1:group) delta_y[,i] = cumsub(y[,i])
-    # 数据设定
-    process_data <- list(
-      I = nrow(delta_y),
-      J = ncol(delta_y),
-      x = delta_y,
-      t = delta_time
-    )
-    # 后验抽样
-    # library(rstan)
-    options(mc.cores = parallel::detectCores())
-    if(process == "Wiener"){
-      wiener_linear = "data {
-                                int<lower=0> I;
-                                int<lower=0> J;
-                                matrix[I,J] x;
-                                matrix[I,J] t;
-                              }
+    if(method == "MLE"){
+      mle_re = optim(par=par, fn = MLE, process = process, type = type,
+                     data = data, s=s,rel = rel,
+                     method = "Nelder-Mead", hessian = TRUE)
+      mle_par = mle_re$par
+      # Interval estimation
+      mle_up = mle_re$par + sqrt(diag(solve(mle_re$hessian)))*qnorm(p)
+      mle_low = mle_re$par - sqrt(diag(solve(mle_re$hessian)))*qnorm(p)
+      mle_summary = round(cbind(mle_low,mle_re$par,mle_up),4)
+      colnames(mle_summary) = c("low","mean","up")
+      return(mle_summary)
+    } else if(method == "Bayes"){
+      rstan::rstan_options(auto_write = TRUE)
+      # options(mc.cores = parallel::detectCores())
+      # Data preparation
+      if(type == "classical"){
+        group = ncol(data[[1]]) - 1;time = data[[1]][,1];y = data[[1]][-1,-1];group = ncol(data[[1]][,-1])
+        delta_time = matrix(rep(diff(time),group),length(diff(time)),group)
+        delta_y = matrix(NA,nrow(delta_time),group)
+        for(i in 1:group) delta_y[,i] = cumsub(y[,i])
+        # Data setting
+        process_data <- list(I = nrow(delta_y), J = ncol(delta_y), x = delta_y, t = delta_time)
 
-                              parameters {
-                                real mu;
-                                real<lower=0> w;
-                              }
+        # Posterior sampling
+        stan_model_code = Bayes_stan(process = process, type = type)
+        fit1 = rstan::stan(model_code = stan_model_code,
+                           data = process_data, chains = chains, warmup = warmup, iter = iter,
+                           cores = cores,refresh = 0)
 
+        return(re = list("summary" = round(rstan::summary(fit1)$summary[c(1,2),c(4,1,8)],4),
+                    "stan_re" = fit1)) # 给出stan原始的结果，根据这个结果做诊断和可视化
+      } else if(type == 'acc'){
+        delta_y = delta_time = array(NA,dim = c(dim(dat[[1]])[1]-1,dim(dat[[1]])[2]-1,3))
+        for(k in 1:length(s)){
+          group = ncol(data[[k]]) - 1;time = data[[k]][,1];y = data[[k]][-1,-1];group = ncol(data[[k]][,-1])
+          delta_time[,,k] = matrix(rep(diff(time),group),length(diff(time)),group)
+          delta_y[,,k] = sapply(y,cumsub)
+        }
+        # Data setting
+        process_data <- list(I = dim(delta_y)[1], J = dim(delta_y)[2],
+                             K = dim(delta_y)[3], x = delta_y, t = delta_time,
+                             rels = acc_stress(s=s, rel = rel))
+        # Posterior sampling
+        stan_model_code = Bayes_stan(process = process, type = type)
+        fit1 = rstan::stan(model_code = stan_model_code,
+                           data = process_data, chains = chains, warmup = warmup, iter = iter,
+                           cores = cores,refresh = 0)
 
-                              model {
-                                w ~ gamma(1,1);
-                                mu ~ normal(0, 100/w);
-                                for (i in 1:I){
-                                  for (j in 1:J) {
-                                    x[i,j] ~ normal(mu * t[i,j], w * t[i,j]);
-                                  }
-                                }
-                              }
-                              "
-      fit1 = rstan::stan(model_code = wiener_linear,
-                  data = process_data, chains = 1, warmup = 1000, iter = 2000,
-                  cores = 1,refresh = 0)
-    }else if(process == "Gamma"){
-      gamma_linear = "data {
-                                int<lower=0> I;
-                                int<lower=0> J;
-                                matrix[I,J] x;
-                                matrix[I,J] t;
-                              }
-
-                              parameters {
-                                real mu;
-                                real<lower=0> w;
-                              }
-
-
-                              model {
-                                w ~ gamma(1,1);
-                                mu ~ normal(0, 100/w);
-                                for (i in 1:I){
-                                  for (j in 1:J) {
-                                    x[i,j] ~ gamma(mu * t[i,j], 1/w);
-                                  }
-                                }
-                              }
-
-        "
-      fit1 = rstan::stan(model_code = gamma_linear,
-                  data = process_data, chains = 1, warmup = 1000, iter = 2000,
-                  cores = 1,refresh = 0)
-    }else if(process == "IG"){
-      ig_linear = "
-              functions {
-                          real IG_log (real x, real mu, real lambda){
-                            // vector [num_elements (x)] prob;
-                            real lprob;
-                            lprob = log((lambda/(2*pi()*(x^3)))^0.5 * exp(-lambda*(x - mu)^2/(2*mu^2*x)));
-                            return lprob;
-                          }
-                        }
-
-
-              data {
-                int<lower=0> I;
-                int<lower=0> J;
-                matrix[I,J] x;
-                matrix[I,J] t;
-              }
-
-              parameters {
-                real mu;
-                real<lower=0> w;
-              }
-
-
-              model {
-                w ~ gamma(1,1); //scale
-                mu ~ normal(0, 1); //shape
-                for (i in 1:I){
-                  for (j in 1:J) {
-                    x[i,j] ~ IG_log (mu * t[i,j], w * t[i,j]^2);
-                  }
-                }
-              }
-"
-      fit1 = rstan::stan(model_code = ig_linear,
-                  data = process_data, chains = 1, warmup = 1000, iter = 2000,
-                  cores = 1,refresh = 0)
+        return(re = list("summary" = round(rstan::summary(fit1)$summary[1:6,c(4,1,8)],4),
+                    "stan_re" = fit1)) # 给出stan原始的结果，根据这个结果做诊断和可视化
+      }
     }
-    return(fit1) # 给出stan原始的结果，根据这个结果做诊断和可视化
-  }# else if(method == "ME"){
-  #   me_par = gamma_moment(data = dat[[1]])
-  #   me_up = c(NA,NA) # 需要加入自助法
-  #   me_low =c(NA,NA)
-  #   me_summary = round(cbind(me_low,me_par,me_up),3)
-  #   colnames(me_summary) = c("low","mean","up")
-  #   return(me_summary)
-  # }
 }
-
 
 

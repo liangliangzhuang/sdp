@@ -9,7 +9,9 @@ Reliability(
   threshold = 150,
   par = mle_par,
   process = "Wiener",
-  type = "classical"
+  type = "classical",
+  s = NULL,
+  rel = NULL
 )
 }
 \arguments{
@@ -22,15 +24,14 @@ Reliability(
 \item{process}{Wiener, Gamma or Inverse Gaussian process.}
 
 \item{type}{classical in default.}
+
+\item{s}{stress.}
+
+\item{rel}{relationship.}
 }
 \value{
 Return a list containing RUL at different time points for each group.
 }
 \description{
 This function is used to calculate reliability function.
-}
-\examples{
-dat <- sim_dat(group = 6, t = 1:200, para = c(2, 3), process = "Wiener")
-mle_fit <- sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat[[1]])
-Reliability(t = 50, threshold = 150, par = mle_fit, process = "Wiener", type = "classical")
 }

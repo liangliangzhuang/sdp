@@ -7,7 +7,7 @@
 RUL_plot(
   fut_time = c(50, 55, 60, 65, 70, 75, 80),
   group = 1,
-  time_epoch = 1:300,
+  time_epoch = 1:100,
   threshold = 350,
   data = dat[[1]],
   para = mle_par,
@@ -46,8 +46,4 @@ Return a list containing RUL at different time points for each group.
 }
 \description{
 This function is used to calculate Remaining Useful Life (RUL).
-}
-\examples{
-dat <- sim_dat(group = 6, t = 1:200, para = c(2, 3), process = "Wiener")
-plot_path(dat[[1]])
 }

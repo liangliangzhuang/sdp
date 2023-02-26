@@ -12,12 +12,12 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
-#' #' dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
 #' @export
 #' @importFrom expint gammainc
 #'
 RUL <- function(t, cur_time, threshold, data,
                 par, process, type) {
+  if(type == 'acc') stop("This type can not provide a RUL distribution.")
   RUL <- list()
   cur_path <- as.numeric(data[cur_time, ])
   if (process == "Wiener") {
@@ -28,15 +28,18 @@ RUL <- function(t, cur_time, threshold, data,
   } else if (process == "Gamma") {
     for (i in 1:(ncol(data) - 1)) {
       RUL[[i]] <- numeric()
-      RUL[[i]] <- expint::gammainc(par[1] * (t[t > cur_time] - cur_time), (threshold - cur_path[i]) / par[2]) /
-        gamma(par[1] * (t[t > cur_time] - cur_time))
+      v = sqrt(par[2]/(threshold - cur_path[i])); u = (threshold - cur_path[i])/(par[2]*par[1])
+      RUL[[i]] <- 1/(2*sqrt(2*pi) * u * v) * ((u/t)^(1/2) + (u/t)^(3/2)) *
+        exp(-(1/(2*v^2)) * ((t/u) - 2 + (u/t)))
     }
   } else if (process == "IG") {
     for (i in 1:(ncol(data) - 1)) {
       RUL[[i]] <- numeric()
-      ll <- sqrt(par[2]) / sqrt((threshold - cur_path[i]))
-      RUL[[i]] <- dnorm(ll * (t - threshold / par[1])) * ll - 2 * par[2] / par[1] * exp(2 * par[2] * t / par[1]) * pnorm(-ll * ((threshold - cur_path[i]) / par[1] + t)) +
-        exp(2 * par[2] * t / par[1]) * dnorm(-ll * ((threshold - cur_path[i]) / par[1] + t)) * ll
+      sqrt_lam_lxt <- sqrt(par[2] / (threshold - cur_path[i]))
+      term1 <- dnorm(sqrt_lam_lxt * (t - threshold / par[1])) * sqrt_lam_lxt
+      term2 <- -2 * par[2] / par[1] * exp(2 * par[2] * t / par[1]) * pnorm(-sqrt_lam_lxt * ((threshold - cur_path[i]) / par[1] + t))
+      term3 <- exp(2 * par[2] * t / par[1]) * dnorm(-sqrt_lam_lxt * ((threshold - cur_path[i]) / par[1] + t)) * sqrt_lam_lxt
+      RUL[[i]] <- term1 + term2 + term3
     }
   }
   return(RUL)

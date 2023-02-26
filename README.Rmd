@@ -1,5 +1,7 @@
 ---
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -62,20 +64,22 @@ This is a basic example which shows you how to solve a common problem.
 We use `sim_dat()` to generate a simulated Wiener degradation process, where group is 6, time epoch is `t = 1:200`. We denote the parameters are $\mu = 2, \sigma = 3$. The output is a list: (i) first part of the list is the amount of degradation of the simulated data, (ii) second part is the increment of its degradation.
 
 ```{r cars}
-dat = sim_dat(group = 6, t = 1:200, para = c(2,3),process = "Wiener")
+dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
+               process = "Wiener",type = "classical", 
+               s = NULL, rel = NULL)
 str(dat)
 ```
 
 Using `plot_path()` function to plot the simulated degradation data. 
 
 ```{r}
-plot_path(dat[[1]])
+plot_path(dat)
 ```
 
 The object is a ggplot, so you can add other related function to change the plot. For example, let's change the theme pattern. 
 
 ```{r}
-plot_path(dat[[1]]) + theme_bw() +
+plot_path(dat) + theme_bw() +
   theme(panel.grid = element_blank())
 ```
 
@@ -89,7 +93,7 @@ For this section, we provide a tutorial for parameter estimates using MLE and Ba
 The output of MLE is the dataframe contains point and interval estimates.
 
 ```{r}
-mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat[[1]])
+mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical", data = dat)
 mle_fit
 ```
 
@@ -99,12 +103,11 @@ mle_fit
 The output of Bayes is the resampling in `rstan`. According to this object, we can do further process, e.g., prognostic, check an so on. 
 
 ```{r message=FALSE,warning=FALSE,error=FALSE}
-fit1 = sta_infer(method = "Bayes", process = "Wiener",type = "classical",data = dat[[1]])
-bayes_fit = rstan::summary(fit1)$summary[c(1,2),c(4,1,8)] #
-bayes_fit
+bayes_fit = sta_infer(method = "Bayes", process = "Wiener", type = "classical", data = dat)
+bayes_fit$summary
 # print(fit1, probs = c(0.025,0.5,0.975),pars = c("mu","w"))
-rstan::plot(fit1)
-rstan::traceplot(fit1,pars = c("mu","w"), inc_warmup = T,nrow = 1) + theme(legend.position = "top")
+rstan::plot(bayes_fit$stan_re)
+rstan::traceplot(bayes_fit$stan_re,pars = c("mu","w"), inc_warmup = T,nrow = 1) + theme(legend.position = "top")
 ```
 
 
@@ -113,19 +116,20 @@ rstan::traceplot(fit1,pars = c("mu","w"), inc_warmup = T,nrow = 1) + theme(legen
 Based on the statistical inference, we use `Reliability()` and `RUL()` to calculate the Reliability and RUL, respectively. Then using  `Reliability_plot()` and `RUL_plot()` to plot.
 
 ```{r}
-reb = Reliability(t = 50, threshold = 150,par = mle_fit,
-                       process = "Wiener",type = "classical")
-Reliability_plot(R_time = 1:150,sum_para = mle_fit,threshold = 150,
+reb = Reliability(t = 40, threshold = 100, par = mle_fit[,2],process = "Wiener",type = "classical")
+
+Reliability_plot(R_time = 1:200,sum_para = mle_fit,threshold = 100,
                  process = "Wiener",type = "classical")
 
-rul = RUL(t = 1:100, cur_time = 100, threshold = 150, data = dat[[1]],
-    par = mle_fit[,2], process = "Wiener", type = "classical")
+
+rul = RUL(t = 1:100, cur_time = 80, threshold = 150, data = dat[[1]],
+          par = mle_fit[,2], process = "Wiener", type = "classical")
+rul
 
 RUL_plot(fut_time = c(50,55,60,65,70,75,80),time_epoch = 1:100,
-                threshold = 150,zlim = c(0,0.05),xlim = c(0,100),
-                para = mle_fit[,2],
-                real_RUL=c(NA,NA,NA,NA,NA,NA)+40)
-
+         threshold = 150,zlim = c(0,0.05),xlim = c(0,100),
+         para = mle_fit[,2], group = 1,
+         real_RUL=c(NA,NA,NA,NA,NA,NA)+40)
 ```
 
 ## Example: lithium_battery data
@@ -133,7 +137,8 @@ RUL_plot(fut_time = c(50,55,60,65,70,75,80),time_epoch = 1:100,
 
 ```{r warning=FALSE}
 str(lithium_battery)
-plot_path(lithium_battery[[1]]) + 
+lion_battery = list(lithium_battery[[1]])
+plot_path(lion_battery) + 
   # scale_color_discrete() +
   theme_bw() + 
   theme(panel.grid = element_blank()) 
@@ -144,9 +149,9 @@ plot_path(lithium_battery[[1]]) +
 # Inference
 # MLE ========
 mle_fit = sta_infer(method = "MLE", process = "Wiener", type = "classical",
-                    data = lithium_battery[[1]])
+                    data = lion_battery)
 mle_fit
-Reliability(t = 100, threshold = lithium_battery[[2]][1],par = mle_fit,
+Reliability(t = 100, threshold = lithium_battery[[2]][1],par = mle_fit[,2],
             process = "Wiener",type = "classical")
 Reliability_cowplot(R_time = 1:300, sum_para = mle_fit, threshold = lithium_battery[[2]],
                                process = "Wiener", type = "classical")
@@ -155,15 +160,15 @@ Reliability_cowplot(R_time = 1:300, sum_para = mle_fit, threshold = lithium_batt
 ```{r}
 rul2 = RUL(t = 1:100, cur_time = 30, threshold = lithium_battery[[2]][1], data = lithium_battery[[1]], par = mle_fit[,2], process = "Wiener", type = "classical")
 
-RUL_plot(fut_time = c(10,15,20,25,30), 
-         time_epoch = 1:300,
+RUL_plot(fut_time = c(10,15,20,25,30,50), 
+         time_epoch = 1:30,
          group = 1,
          process = "Wiener", 
          type = "classical",
          threshold = lithium_battery[[2]][1],
          dat = lithium_battery[[1]],
          zlim = c(0,0.01),
-         xlim = c(0,300),
+         xlim = c(0,30),
          para = mle_fit[,2],
          real_RUL=c(NA,NA,NA,NA,NA,NA))
 ```

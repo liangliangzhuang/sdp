@@ -4,7 +4,20 @@
 \alias{sta_infer}
 \title{Statistical inference}
 \usage{
-sta_infer(method, process, type, data)
+sta_infer(
+  method = "MLE",
+  process = "Wiener",
+  type = "classical",
+  data = dat,
+  p = 0.975,
+  par = c(1, 1),
+  chains = 1,
+  warmup = 1000,
+  iter = 2000,
+  cores = 1,
+  s = NULL,
+  rel = NULL
+)
 }
 \arguments{
 \item{method}{time.}
@@ -14,6 +27,22 @@ sta_infer(method, process, type, data)
 \item{type}{classical in default.}
 
 \item{data}{degradation data.}
+
+\item{p}{in default `p=0.975`.}
+
+\item{par}{initial parameter.}
+
+\item{chains}{in default `chains = 1`}
+
+\item{warmup}{in default `warmup = 1000`.}
+
+\item{iter}{in default `iter= 2000`.}
+
+\item{cores}{cores = 1,}
+
+\item{s}{stress.}
+
+\item{rel}{relationship.}
 }
 \value{
 Returns a data frame if method is MLE,
@@ -22,7 +51,4 @@ returns stan raw results if method is Bayes.
 \description{
 This function is used to statistical inference of model parameters.
 The methods including maximum likelihood estimator and Bayesian inference.
-}
-\examples{
-11
 }

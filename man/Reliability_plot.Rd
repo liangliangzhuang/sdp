@@ -9,7 +9,9 @@ Reliability_plot(
   sum_para = fit,
   threshold = 150,
   process = "Wiener",
-  type = "classical"
+  type = "classical",
+  rel = rel,
+  s = s
 )
 }
 \arguments{
@@ -22,21 +24,14 @@ Reliability_plot(
 \item{process}{Wiener, Gamma or Inverse Gaussian process.}
 
 \item{type}{classical in default.}
+
+\item{rel}{relationship.}
+
+\item{s}{stress.}
 }
 \value{
 Return a list containing RUL at different time points for each group.
 }
 \description{
 This function is used to calculate Remaining Useful Life (RUL).
-}
-\examples{
-dat <- sim_dat(group = 6, t = 1:200, para = c(2, 3), process = "Wiener")
-mle_fit <- sta_infer(
-  method = "MLE", process = "Wiener", type = "classical",
-  data = dat[[1]]
-)
-Reliability_plot(
-  R_time = 1:150, sum_para = mle_fit, threshold = 150,
-  process = "Wiener", type = "classical"
-)
 }
