@@ -28,6 +28,8 @@
 #' mle_fit
 #' # Bayes
 #' library(rstan)
+#' rstan_options(auto_write = TRUE)
+#' options(mc.cores = parallel::detectCores())
 #' bayes_fit = sta_infer(method = "Bayes", process = "Wiener",
 #' type = "classical", data = dat)
 #' bayes_fit$summary

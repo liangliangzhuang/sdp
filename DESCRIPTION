@@ -21,14 +21,12 @@ Depends:
 Imports: 
     expint,
     ggplot2,
-    plot3D,
     rstan,
     SuppDists,
     tidyr,
     viridis,
     magrittr,
     stats,
-    graphics,
     dplyr
 RoxygenNote: 7.2.1
 Biarch: true
