@@ -4,6 +4,8 @@
 # sdp <a href='https://liangliangzhuang.github.io/sdp/'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/liangliangzhuang/sdp/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liangliangzhuang/sdp/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Overview

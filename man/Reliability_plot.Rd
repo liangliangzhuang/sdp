@@ -10,8 +10,8 @@ Reliability_plot(
   threshold = 150,
   process = "Wiener",
   type = "classical",
-  rel = rel,
-  s = s
+  rel = NULL,
+  s = NULL
 )
 }
 \arguments{

@@ -37,11 +37,12 @@
 #' #            inc_warmup = TRUE,nrow = 1) +
 #' #    theme(legend.position = "top")
 #' @export
+#'@importFrom stats optim qnorm
 
 sta_infer = function(method = "MLE",
                      process = "Wiener",
                      type = "classical",
-                     data = dat,
+                     data = NULL,
                      p = 0.975,
                      par = c(1,1),
                      chains = 1,
@@ -83,7 +84,7 @@ sta_infer = function(method = "MLE",
         return(re = list("summary" = round(rstan::summary(fit1)$summary[c(1,2),c(4,1,8)],4),
                     "stan_re" = fit1)) # 给出stan原始的结果，根据这个结果做诊断和可视化
       } else if(type == 'acc'){
-        delta_y = delta_time = array(NA,dim = c(dim(dat[[1]])[1]-1,dim(dat[[1]])[2]-1,3))
+        delta_y = delta_time = array(NA,dim = c(dim(data [[1]])[1]-1,dim(data [[1]])[2]-1,3))
         for(k in 1:length(s)){
           group = ncol(data[[k]]) - 1;time = data[[k]][,1];y = data[[k]][-1,-1];group = ncol(data[[k]][,-1])
           delta_time[,,k] = matrix(rep(diff(time),group),length(diff(time)),group)

@@ -4,7 +4,15 @@
 \alias{RUL}
 \title{Remaining Useful Life}
 \usage{
-RUL(t, cur_time, threshold, data, par, process, type)
+RUL(
+  t = NULL,
+  cur_time = NULL,
+  threshold = NULL,
+  data = NULL,
+  par = NULL,
+  process = "Wiener",
+  type = "classical"
+)
 }
 \arguments{
 \item{t}{time.}

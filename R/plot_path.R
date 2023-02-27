@@ -6,21 +6,24 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
+#' # data simulation (a Wiener linear process with 5 units)
 #' dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
 #' process = "Wiener",type = "classical",
 #' s = NULL, rel = NULL)
+#' # Plot degradation path
+#' library(ggplot2)
 #' plot_path(dat)
 #' # add ggplot related functions.
 #' plot_path(dat) +
 #' theme_bw() +
 #' theme(panel.grid = element_blank())
 #' @export
-#' @importFrom tidyr pivot_longer
 #' @importFrom viridis scale_color_viridis
-#' @import ggplot2
+#' @import ggplot2 magrittr dplyr
+#' @importFrom tidyr pivot_longer
 #'
 
-plot_path <- function(data = liion_new) {
+plot_path <- function(data = NULL) {
   # 画图
   # library(tidyr)
   # library(ggplot2)
@@ -40,8 +43,8 @@ plot_path <- function(data = liion_new) {
   }
   if(is.list(data) == TRUE && length(data) > 1){
     dim2 = rep(1:length(data), times = sapply(data,dim)[1,])
-    data %>% bind_rows() %>%
-      mutate(id = dim2) %>%
+    data %>% dplyr::bind_rows() %>%
+      dplyr::mutate(id = dim2) %>%
       tidyr::pivot_longer(colnames(.)[-c(1,ncol(.))],
                           names_to = "Group",values_to = "y") -> new_data
     colnames(new_data)[1] = "Time"

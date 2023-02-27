@@ -7,7 +7,7 @@
 Reliability(
   t = 100,
   threshold = 150,
-  par = mle_par,
+  par = NULL,
   process = "Wiener",
   type = "classical",
   s = NULL,

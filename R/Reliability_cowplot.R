@@ -15,8 +15,11 @@
 #'
 
 
-Reliability_cowplot = function(R_time, sum_para, threshold,
-           process, type) {
+Reliability_cowplot = function(R_time,
+                               sum_para,
+                               threshold,
+                               process,
+                               type) {
   options(warn = -1)
   R_data <- data.frame(
     "Time" = rep(R_time, times = length(threshold)),

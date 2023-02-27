@@ -27,8 +27,8 @@ Reliability_plot <- function(R_time = 1:300,
                              threshold = 150,
                              process = "Wiener",
                              type = "classical",
-                             rel = rel,
-                             s = s) {
+                             rel = NULL,
+                             s = NULL) {
   R_data <- data.frame(
     "Time" = R_time,
     "Up" = Reliability(t = R_time, threshold = threshold, par = sum_para[, 3],

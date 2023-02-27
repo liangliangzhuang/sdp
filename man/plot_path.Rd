@@ -4,7 +4,7 @@
 \alias{plot_path}
 \title{Remaining Useful Life}
 \usage{
-plot_path(data = liion_new)
+plot_path(data = NULL)
 }
 \arguments{
 \item{data}{data.}
@@ -16,9 +16,12 @@ Return a list containing RUL at different time points for each group.
 This function is used to calculate Remaining Useful Life (RUL).
 }
 \examples{
+# data simulation (a Wiener linear process with 5 units)
 dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
 process = "Wiener",type = "classical",
 s = NULL, rel = NULL)
+# Plot degradation path
+library(ggplot2)
 plot_path(dat)
 # add ggplot related functions.
 plot_path(dat) +

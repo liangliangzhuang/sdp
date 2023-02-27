@@ -15,7 +15,8 @@
 #' @examples
 #' 1
 #' @export
-#'
+#' @import plot3D
+#' @importFrom graphics legend
 
 # 未来时刻fut_time下的RUL值
 RUL_3D_density <- function(fut_time,

@@ -8,7 +8,7 @@ sta_infer(
   method = "MLE",
   process = "Wiener",
   type = "classical",
-  data = dat,
+  data = NULL,
   p = 0.975,
   par = c(1, 1),
   chains = 1,

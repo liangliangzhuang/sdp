@@ -20,7 +20,7 @@
 #' s = NULL, rel = NULL)
 #' str(dat)
 #' @export
-#'
+#' @importFrom stats rgamma rnorm
 sim_dat <- function(group = 5,
                     t = 1:100,
                     para = c(2,3),

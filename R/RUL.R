@@ -15,9 +15,15 @@
 #' 1
 #' @export
 #' @importFrom expint gammainc
+#' @importFrom stats dnorm pnorm
 #'
-RUL <- function(t, cur_time, threshold, data,
-                par, process, type) {
+RUL <- function(t = NULL,
+                cur_time = NULL,
+                threshold = NULL,
+                data = NULL,
+                par = NULL,
+                process = "Wiener",
+                type = "classical") {
   if(type == 'acc') stop("This type can not provide a RUL distribution.")
   RUL <- list()
   cur_path <- as.numeric(data[cur_time, ])
