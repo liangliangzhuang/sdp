@@ -1,10 +1,8 @@
 pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
-articles:
-  Real-data-analysis: Real-data-analysis.html
-  Simulation-data-analysis: Simulation-data-analysis.html
-last_built: 2023-02-26T09:48Z
+articles: {}
+last_built: 2023-02-27T12:49Z
 urls:
   reference: https://liangliangzhuang.github.io/sdp/reference
   article: https://liangliangzhuang.github.io/sdp/articles
