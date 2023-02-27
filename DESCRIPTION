@@ -1,8 +1,8 @@
 Package: sdp
 Type: Package
 Title: Stochastic degradation process
-Version: 0.1.0
-Authors@R:c(
+Version: 0.2.0
+Authors@R: c(
  person("Liangliang", "Zhuang", , "liangliangzhuang1997@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4450-5513")),
  person("Wenhui", "Wu", role = "aut",
@@ -11,14 +11,13 @@ Authors@R:c(
 Maintainer: Liangliang Zhuang <liangliangzhuang1997@gmail.com>
 Description: More about what it does (maybe more than one line).   
     Use four spaces when indenting paragraphs within the Description.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 URL: https://liangliangzhuang.github.io/sdp/
 BugReports: https://github.com/liangliangzhuang/sdp/issues
 LazyData: true
 Depends: 
-    R (>= 3.4.0),
-    tidyverse
+    R (>= 3.5.0),
 Imports: 
     expint,
     ggplot2,
@@ -26,7 +25,11 @@ Imports:
     rstan,
     SuppDists,
     tidyr,
-    viridis
+    viridis,
+    magrittr,
+    stats,
+    graphics,
+    dplyr
 RoxygenNote: 7.2.1
 Biarch: true
 SystemRequirements: GNU make
