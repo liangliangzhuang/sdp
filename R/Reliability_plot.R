@@ -11,14 +11,20 @@
 #'
 #' @return  Return a list containing RUL at different time points for each group.
 #' @examples
-#' dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
-#' process = "Wiener",type = "classical")
+#' dat <- sim_dat(
+#'   group = 5, t = 1:200, para = c(2, 3),
+#'   process = "Wiener", type = "classical"
+#' )
 #' # MLE
-#' mle_fit = sta_infer(method = "MLE", process = "Wiener",
-#' type = "classical", data = dat)
+#' mle_fit <- sta_infer(
+#'   method = "MLE", process = "Wiener",
+#'   type = "classical", data = dat
+#' )
 #' # Reliability
-#' Reliability_plot(R_time = 1:200,sum_para = mle_fit,threshold = 100,
-#' process = "Wiener",type = "classical")
+#' Reliability_plot(
+#'   R_time = 1:200, sum_para = mle_fit, threshold = 100,
+#'   process = "Wiener", type = "classical"
+#' )
 #' @import ggplot2
 #' @export
 #'
@@ -31,12 +37,18 @@ Reliability_plot <- function(R_time = 1:300,
                              s = NULL) {
   R_data <- data.frame(
     "Time" = R_time,
-    "Up" = Reliability(t = R_time, threshold = threshold, par = sum_para[, 3],
-                       process = process, type = type, rel = rel, s = s),
-    "Mean" = Reliability(t = R_time, threshold = threshold, par = sum_para[, 2],
-                         process = process, type = type, rel = rel, s = s),
-    "Low" = Reliability(t = R_time, threshold = threshold, par = sum_para[, 1],
-                        process = process, type = type, rel = rel, s = s)
+    "Up" = Reliability(
+      t = R_time, threshold = threshold, par = sum_para[, 3],
+      process = process, type = type, rel = rel, s = s
+    ),
+    "Mean" = Reliability(
+      t = R_time, threshold = threshold, par = sum_para[, 2],
+      process = process, type = type, rel = rel, s = s
+    ),
+    "Low" = Reliability(
+      t = R_time, threshold = threshold, par = sum_para[, 1],
+      process = process, type = type, rel = rel, s = s
+    )
   )
   # 绘制带区间估计的可靠度函数
   p <- ggplot(R_data) +

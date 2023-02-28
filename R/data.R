@@ -15,12 +15,3 @@
 #' }
 #' @source <https://c3.ndc.nasa.gov/dashlink/resources/133/>
 "lithium_battery"
-
-
-
-
-
-
-
-
-

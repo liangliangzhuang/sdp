@@ -36,7 +36,9 @@ Return a list containing RUL at different time points for each group.
 This function is used to calculate reliability function.
 }
 \examples{
-reb = Reliability(t = 40, threshold = 100, par = c(1,2),
-process = "Wiener",type = "classical")
+reb <- Reliability(
+  t = 40, threshold = 100, par = c(1, 2),
+  process = "Wiener", type = "classical"
+)
 reb
 }

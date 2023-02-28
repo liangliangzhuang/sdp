@@ -24,7 +24,7 @@ RUL <- function(t = NULL,
                 par = NULL,
                 process = "Wiener",
                 type = "classical") {
-  if(type == 'acc') stop("This type can not provide a RUL distribution.")
+  if (type == "acc") stop("This type can not provide a RUL distribution.")
   RUL <- list()
   cur_path <- as.numeric(data[cur_time, ])
   if (process == "Wiener") {
@@ -35,9 +35,10 @@ RUL <- function(t = NULL,
   } else if (process == "Gamma") {
     for (i in 1:(ncol(data) - 1)) {
       RUL[[i]] <- numeric()
-      v = sqrt(par[2]/(threshold - cur_path[i])); u = (threshold - cur_path[i])/(par[2]*par[1])
-      RUL[[i]] <- 1/(2*sqrt(2*pi) * u * v) * ((u/t)^(1/2) + (u/t)^(3/2)) *
-        exp(-(1/(2*v^2)) * ((t/u) - 2 + (u/t)))
+      v <- sqrt(par[2] / (threshold - cur_path[i]))
+      u <- (threshold - cur_path[i]) / (par[2] * par[1])
+      RUL[[i]] <- 1 / (2 * sqrt(2 * pi) * u * v) * ((u / t)^(1 / 2) + (u / t)^(3 / 2)) *
+        exp(-(1 / (2 * v^2)) * ((t / u) - 2 + (u / t)))
     }
   } else if (process == "IG") {
     for (i in 1:(ncol(data) - 1)) {

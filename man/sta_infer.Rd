@@ -53,12 +53,16 @@ This function is used to statistical inference of model parameters.
 The methods including maximum likelihood estimator and Bayesian inference.
 }
 \examples{
-dat <- sim_dat(group = 5, t = 1:200, para = c(2,3),
-process = "Wiener",type = "classical",
-s = NULL, rel = NULL)
+dat <- sim_dat(
+  group = 5, t = 1:200, para = c(2, 3),
+  process = "Wiener", type = "classical",
+  s = NULL, rel = NULL
+)
 # MLE
-mle_fit = sta_infer(method = "MLE", process = "Wiener",
-type = "classical", data = dat)
+mle_fit <- sta_infer(
+  method = "MLE", process = "Wiener",
+  type = "classical", data = dat
+)
 mle_fit
 # Bayes
 # rstan_options(auto_write = TRUE)

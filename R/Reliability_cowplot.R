@@ -15,26 +15,28 @@
 #'
 
 
-Reliability_cowplot = function(R_time,
-                               sum_para,
-                               threshold,
-                               process,
-                               type) {
+Reliability_cowplot <- function(R_time,
+                                sum_para,
+                                threshold,
+                                process,
+                                type) {
   options(warn = -1)
   R_data <- data.frame(
     "Time" = rep(R_time, times = length(threshold)),
-    "Up" =  as.numeric(sapply(threshold, Reliability,t = R_time, par = sum_para[, 3], process = process, type = type)),
-    "Mean" = as.numeric(sapply(threshold, Reliability,t = R_time, par = sum_para[, 1], process = process, type = type)),
-    "Low" = as.numeric(sapply(threshold, Reliability,t = R_time, par = sum_para[, 2], process = process, type = type)),
-    "Class" =  rep(1:length(threshold),each = length(R_time))
-    )
+    "Up" = as.numeric(sapply(threshold, Reliability, t = R_time, par = sum_para[, 3], process = process, type = type)),
+    "Mean" = as.numeric(sapply(threshold, Reliability, t = R_time, par = sum_para[, 1], process = process, type = type)),
+    "Low" = as.numeric(sapply(threshold, Reliability, t = R_time, par = sum_para[, 2], process = process, type = type)),
+    "Class" = rep(1:length(threshold), each = length(R_time))
+  )
   R_data %>% pivot_longer(`Up`:`Low`,
-                          names_to = "Estimate",
-                          values_to = "Value") -> R_data_new
-  p = ggplot(R_data_new,aes(Time,Value,color = Estimate)) +
+    names_to = "Estimate",
+    values_to = "Value"
+  ) -> R_data_new
+  p <- ggplot(R_data_new, aes(Time, Value, color = Estimate)) +
     geom_line() +
-    facet_wrap(vars(as.factor(Class)),nrow = 2) +
-    theme_bw() + theme(panel.grid = element_blank()) +
+    facet_wrap(vars(as.factor(Class)), nrow = 2) +
+    theme_bw() +
+    theme(panel.grid = element_blank()) +
     scale_color_viridis(discrete = T) +
     labs(x = "Time", y = "Reliability")
   return(p)

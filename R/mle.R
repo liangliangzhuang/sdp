@@ -1,3 +1,23 @@
+#' Generate MLE method
+#'
+#' This function is used to generate MLE.
+#'
+#' @param par parameters of a certain model.
+#' @param data The number of groups of products
+#' @param process Wiener, Gamma or Inverse Gaussian process.
+#' @param type classical in default.
+#' @param s  stress.
+#' @param rel relationship.
+#'
+#' @return  Return a list containing simulated data at different time points for each group.
+#' The output is a list.
+#' The first part of the list is the amount of degradation of the simulated data,
+#' and the second part is the increment of its degradation
+#' @examples
+#' 1
+#' @export
+#' @importFrom stats rgamma rnorm
+
 MLE <- function(par = c(3, 3),
                 data = NULL,
                 process = "Wiener",
@@ -7,14 +27,16 @@ MLE <- function(par = c(3, 3),
   # Input: par = c(mu, sigma), data, ...
   # Output: Negative log-likelihood function
   options(warn = -1)
-  if(type == "classical"){
+  if (type == "classical") {
     # Some error messages
-    if(length(par) != 2) stop("The `par` vector is inconsistent, it should be 2.")
+    if (length(par) != 2) stop("The `par` vector is inconsistent, it should be 2.")
 
-    group <- ncol(data[[1]]) - 1; time <- data[[1]][, 1]; y <- data[[1]][-1, -1]
+    group <- ncol(data[[1]]) - 1
+    time <- data[[1]][, 1]
+    y <- data[[1]][-1, -1]
     # Difference to get delta_time and delta_y
     delta_time <- matrix(rep(diff(time), group), length(diff(time)), group)
-    delta_y <- sapply(y,cumsub)
+    delta_y <- sapply(y, cumsub)
 
     if (process == "Wiener") {
       logl <- -1 / 2 * sum(log(delta_time)) - group * nrow(delta_time) * log(par[2]) - sum((delta_y - par[1] * delta_time)^2 / (2 * par[2]^2 * delta_time), na.rm = T)
@@ -25,16 +47,18 @@ MLE <- function(par = c(3, 3),
     } else if (process == "IG") {
       logl <- nrow(delta_time) * group * 1 / 2 * log(par[2]) + sum(log(delta_time) - 3 / 2 * log(delta_y) - (par[2] * (delta_y - par[1] * delta_time)^2) / (2 * par[1]^2 * delta_y), na.rm = T)
     }
-  } else if(type == "acc"){
+  } else if (type == "acc") {
     # Some error messages
-    if(length(par) != 3) stop("The `par` vector is inconsistent, it should be 3.")
-    logl = numeric()
-    mu = exp(par[1] + par[2] * acc_stress(s=s, rel = rel))
-    for(k in 1:length(s)){
-      group <- ncol(data[[k]]) - 1; time <- data[[k]][, 1]; y <- data[[k]][-1, -1]
+    if (length(par) != 3) stop("The `par` vector is inconsistent, it should be 3.")
+    logl <- numeric()
+    mu <- exp(par[1] + par[2] * acc_stress(s = s, rel = rel))
+    for (k in 1:length(s)) {
+      group <- ncol(data[[k]]) - 1
+      time <- data[[k]][, 1]
+      y <- data[[k]][-1, -1]
       # Difference to get delta_time and delta_y
       delta_time <- matrix(rep(diff(time), group), length(diff(time)), group)
-      delta_y <- sapply(y,cumsub)
+      delta_y <- sapply(y, cumsub)
       if (process == "Wiener") {
         logl[k] <- -1 / 2 * sum(log(delta_time)) - group * nrow(delta_time) * log(par[3]) - sum((delta_y - mu[k] * delta_time)^2 / (2 * par[3]^2 * delta_time), na.rm = T)
       } else if (process == "Gamma") {
@@ -94,8 +118,3 @@ MLE <- function(par = c(3, 3),
 #   logl = nrow(delta_time)*group * (1/2 * log(par[2]) + log(par[1])) + sum(log(delta_time) - 1/2 * log(2*pi*delta_y^3) - (par[2]*(delta_y - par[1]*delta_time)^2)/(2*delta_time),na.rm =T)
 #   return(-logl)
 # }
-
-
-
-
-

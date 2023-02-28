@@ -1,9 +1,8 @@
-
-Bayes_stan = function(process = "Wiener",
-                      type = "classical"){
-  if(type == "classical"){
-    if(process == "Wiener"){
-      stan_code = "data {
+Bayes_stan <- function(process = "Wiener",
+                       type = "classical") {
+  if (type == "classical") {
+    if (process == "Wiener") {
+      stan_code <- "data {
                             int<lower=0> I;
                             int<lower=0> J;
                             matrix[I,J] x;
@@ -25,8 +24,8 @@ Bayes_stan = function(process = "Wiener",
                           }
                         }
                       "
-    }else if(process == "Gamma"){
-      stan_code = "data {
+    } else if (process == "Gamma") {
+      stan_code <- "data {
                         int<lower=0> I;
                         int<lower=0> J;
                         matrix[I,J] x;
@@ -48,8 +47,8 @@ Bayes_stan = function(process = "Wiener",
                         }
                        }
         "
-    }else if(process == "IG"){
-      stan_code = "
+    } else if (process == "IG") {
+      stan_code <- "
               functions {
                           real IG_log (real x, real mu, real lambda){
                             // vector [num_elements (x)] prob;
@@ -82,9 +81,9 @@ Bayes_stan = function(process = "Wiener",
               }
 "
     }
-  }else if(type == "acc"){
-    if(process == "Wiener"){
-      stan_code = "
+  } else if (type == "acc") {
+    if (process == "Wiener") {
+      stan_code <- "
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -119,8 +118,8 @@ model {
 }
 
 "
-    }else if(process == "Gamma"){
-      stan_code = "
+    } else if (process == "Gamma") {
+      stan_code <- "
 data {
   int<lower=0> I;
   int<lower=0> J;
@@ -154,8 +153,8 @@ model {
   }
 }
         "
-    }else if(process == "IG"){
-      stan_code = "
+    } else if (process == "IG") {
+      stan_code <- "
 functions {
    real IG_log (real x, real mu, real lambda){
    // vector [num_elements (x)] prob;
@@ -199,7 +198,6 @@ model {
 }
 "
     }
-
   }
   return(stan_code)
 }
