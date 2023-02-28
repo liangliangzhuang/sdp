@@ -138,32 +138,16 @@ returns stan raw results if method is Bayes.</p>
 <span class="r-in"><span>type <span class="op">=</span> <span class="st">"classical"</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mle_fit</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         low   mean     up</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1.8356 2.0198 2.2041</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 2.8344 2.9646 3.0949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1.6309 1.8278 2.0247</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 3.0300 3.1692 3.3084</span>
 <span class="r-in"><span><span class="co"># Bayes</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: StanHeaders</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rstan (Version 2.21.8, GitRev: 2e1f913d3ca3)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> For execution on a local, multicore CPU with excess RAM we recommend calling</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> options(mc.cores = parallel::detectCores()).</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> To avoid recompilation of unchanged Stan programs, we recommend calling</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> rstan_options(auto_write = TRUE)</span>
-<span class="r-in"><span><span class="fu"><a href="https://mc-stan.org/rstan/reference/rstan_options.html" class="external-link">rstan_options</a></span><span class="op">(</span>auto_write <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>mc.cores <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">bayes_fit</span> <span class="op">=</span> <span class="fu">sta_infer</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"Bayes"</span>, process <span class="op">=</span> <span class="st">"Wiener"</span>,</span></span>
-<span class="r-in"><span>type <span class="op">=</span> <span class="st">"classical"</span>, data <span class="op">=</span> <span class="va">dat</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">bayes_fit</span><span class="op">$</span><span class="va">summary</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      2.5%   mean  97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu 1.8460 2.0215 2.2062</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w  2.8357 2.9670 3.1158</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">bayes_fit</span><span class="op">$</span><span class="va">summary</span>, probs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.025</span>,<span class="fl">0.5</span>,<span class="fl">0.975</span><span class="op">)</span>,pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mu"</span>,<span class="st">"w"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      2.5%   mean  97.5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mu 1.8460 2.0215 2.2062</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> w  2.8357 2.9670 3.1158</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bayes_fit</span><span class="op">$</span><span class="va">stan_re</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ci_level: 0.8 (80% intervals)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> outer_level: 0.95 (95% intervals)</span>
-<span class="r-plt img"><img src="sta_infer-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># rstan_options(auto_write = TRUE)</span></span></span>
+<span class="r-in"><span><span class="co"># options(mc.cores = parallel::detectCores())</span></span></span>
+<span class="r-in"><span><span class="co"># bayes_fit = sta_infer(method = "Bayes", process = "Wiener",</span></span></span>
+<span class="r-in"><span><span class="co"># type = "classical", data = dat)</span></span></span>
+<span class="r-in"><span><span class="co"># bayes_fit$summary</span></span></span>
+<span class="r-in"><span><span class="co"># print(bayes_fit$summary, probs = c(0.025,0.5,0.975),pars = c("mu","w"))</span></span></span>
+<span class="r-in"><span><span class="co"># plot(bayes_fit$stan_re)</span></span></span>
 <span class="r-in"><span><span class="co"># traceplot(bayes_fit$stan_re,pars = c("mu","w"),</span></span></span>
 <span class="r-in"><span><span class="co">#            inc_warmup = TRUE,nrow = 1) +</span></span></span>
 <span class="r-in"><span><span class="co">#    theme(legend.position = "top")</span></span></span>
