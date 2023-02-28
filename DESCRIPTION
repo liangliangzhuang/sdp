@@ -30,11 +30,13 @@ Imports:
     dplyr
 RoxygenNote: 7.2.1
 Biarch: true
-SystemRequirements: GNU make
+SystemRequirements: GNU make, pandoc (>= 1.12.3), pandoc-citeproc
 Suggests: 
     covr,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
+LinkingTo: StanHeaders (>= 2.21.0), rstan (>= 2.21.1), BH (>= 1.72.0-2), Rcpp (>=
+    0.12.0), RcppEigen (>= 0.3.3.3.0), RcppParallel (>= 5.0.1)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

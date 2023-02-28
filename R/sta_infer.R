@@ -27,14 +27,14 @@
 #' type = "classical", data = dat)
 #' mle_fit
 #' # Bayes
-#' library(rstan)
-#' rstan_options(auto_write = TRUE)
-#' options(mc.cores = parallel::detectCores())
-#' bayes_fit = sta_infer(method = "Bayes", process = "Wiener",
-#' type = "classical", data = dat)
-#' bayes_fit$summary
-#' print(bayes_fit$summary, probs = c(0.025,0.5,0.975),pars = c("mu","w"))
-#' plot(bayes_fit$stan_re)
+#  # library(rstan)
+#' # rstan_options(auto_write = TRUE)
+#' # options(mc.cores = parallel::detectCores())
+#' # bayes_fit = sta_infer(method = "Bayes", process = "Wiener",
+#' # type = "classical", data = dat)
+#' # bayes_fit$summary
+#' # print(bayes_fit$summary, probs = c(0.025,0.5,0.975),pars = c("mu","w"))
+#' # plot(bayes_fit$stan_re)
 #' # traceplot(bayes_fit$stan_re,pars = c("mu","w"),
 #' #            inc_warmup = TRUE,nrow = 1) +
 #' #    theme(legend.position = "top")
