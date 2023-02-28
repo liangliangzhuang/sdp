@@ -19,6 +19,9 @@
     <loc>https://liangliangzhuang.github.io/sdp/news/index.html</loc>
   </url>
   <url>
+    <loc>https://liangliangzhuang.github.io/sdp/reference/MLE.html</loc>
+  </url>
+  <url>
     <loc>https://liangliangzhuang.github.io/sdp/reference/RUL.html</loc>
   </url>
   <url>
@@ -43,10 +46,13 @@
     <loc>https://liangliangzhuang.github.io/sdp/reference/lithium_battery.html</loc>
   </url>
   <url>
+    <loc>https://liangliangzhuang.github.io/sdp/reference/lm_stan.html</loc>
+  </url>
+  <url>
     <loc>https://liangliangzhuang.github.io/sdp/reference/plot_path.html</loc>
   </url>
   <url>
-    <loc>https://liangliangzhuang.github.io/sdp/reference/sdp.html</loc>
+    <loc>https://liangliangzhuang.github.io/sdp/reference/sdp-package.html</loc>
   </url>
   <url>
     <loc>https://liangliangzhuang.github.io/sdp/reference/sim_dat.html</loc>
